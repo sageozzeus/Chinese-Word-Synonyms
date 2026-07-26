@@ -16,7 +16,7 @@ try:
 except ImportError:  # pragma: no cover
     pass
 else:
-    from . import browser, config_dialog, indexer, reviewer
+    from . import about_meta, browser, config_dialog, indexer, reviewer
 
     _menu_installed = False
     ADDON = __name__
@@ -31,12 +31,12 @@ else:
         config_dialog.open_config()
 
     def _setup_menu() -> None:
-        """Tools → Synonyms… opens the settings dialog."""
+        """Tools → Chinese Word Synonyms… opens the settings dialog."""
         global _menu_installed
         if _menu_installed or mw is None:
             return
         try:
-            action = QAction("Synonyms…", mw)
+            action = QAction(f"{about_meta.ADDON_NAME}…", mw)
             action.triggered.connect(_on_settings_menu)
             mw.form.menuTools.addAction(action)
             _menu_installed = True

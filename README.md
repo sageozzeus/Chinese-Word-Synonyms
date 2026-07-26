@@ -22,7 +22,7 @@ Pairs well with **[Chinese Character Relations](https://github.com/sageozzeus/Ch
 2. Download the **`.ankiaddon`** asset (e.g. `chinese_word_synonyms-0.1.0.ankiaddon`), not Source code.
 3. Double-click the file, or open it with Anki / drag it onto the Anki window.
 4. Restart Anki when prompted.
-5. Open **Tools → Synonyms…**
+5. Open **Tools → Chinese Word Synonyms…**
 6. On the **General** tab, set Word / Hanzi, Meaning (and optional Pinyin) fields, then click **Rebuild Index**.
 
 ### From AnkiWeb
@@ -43,7 +43,7 @@ Or copy the `chinese_word_synonyms` folder into your Anki add-ons folder, then r
 
 ## Settings
 
-**Tools → Synonyms…** (or **Tools → Add-ons → Config**):
+**Tools → Chinese Word Synonyms…** (or **Tools → Add-ons → Config**):
 
 | Tab | What it’s for |
 | --- | --- |

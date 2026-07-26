@@ -31,7 +31,7 @@ CHANGELOG: List[Tuple[str, List[str]]] = [
             "General and Appearance settings GUI (no JSON editing)",
             "Click a synonym to open it in the Browser",
             "Light/dark panel colors and optional custom CSS",
-            "Rebuild Index from Tools → Synonyms…",
+            "Rebuild Index from Tools → Chinese Word Synonyms…",
         ],
     ),
 ]

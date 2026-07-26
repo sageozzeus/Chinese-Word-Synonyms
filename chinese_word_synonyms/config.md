@@ -2,7 +2,7 @@
 
 Settings are edited in a **GUI dialog** (no JSON editing required):
 
-- **Tools → Synonyms…**
+- **Tools → Chinese Word Synonyms…**
 - or **Tools → Add-ons → Chinese Word Synonyms → Config**
 
 ## General tab

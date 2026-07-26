@@ -6,13 +6,13 @@ Run these after any change to indexing, rendering, or hooks. Use a Chinese vocab
 
 1. Symlink or install the add-on; restart Anki (**Cmd+Q**, reopen)
 2. Config Word + Meaning fields to match your note type
-3. **Tools → Synonyms…** → General → **Rebuild Index** — tooltip should show note/key counts
+3. **Tools → Chinese Word Synonyms…** → General → **Rebuild Index** — tooltip should show note/key counts
 
 ## Cases
 
 ### 0. Settings GUI
 
-- Open **Tools → Synonyms…**
+- Open **Tools → Chinese Word Synonyms…**
 - **Expect:** dialog with General / Appearance / About tabs (not a JSON editor)
 - Change a field, Save, rebuild when asked (or use **Rebuild Index** on General)
 - Open **Tools → Add-ons → Chinese Word Synonyms → Config**

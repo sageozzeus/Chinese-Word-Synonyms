@@ -460,7 +460,15 @@ def _link_button(label: str, url: str) -> QPushButton:
 def _meta_row(form: QFormLayout, label: str, value: str) -> None:
     val = QLabel(value)
     val.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-    val.setWordWrap(True)
+    # Do not wrap — scroll-area Ignored width can clip the second line
+    # (e.g. "Chinese Word Synonyms" → only "Chinese Word" visible).
+    val.setWordWrap(False)
+    val.setToolTip(value)
+    val.setMinimumWidth(0)
+    val.setSizePolicy(
+        QSizePolicy.Policy.Expanding,
+        QSizePolicy.Policy.Preferred,
+    )
     val.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
     form.addRow(label, val)
 
@@ -486,9 +494,9 @@ class ConfigDialog(QDialog):
 
     def __init__(self, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent or mw)
-        self.setWindowTitle("Chinese Word Synonyms")
-        self.setMinimumWidth(480)
-        self.resize(520, 620)
+        self.setWindowTitle(about_meta.ADDON_NAME)
+        self.setMinimumWidth(520)
+        self.resize(560, 620)
         self.setMinimumHeight(520)
         self._conf = _load_config()
         self._build_ui()

@@ -410,8 +410,10 @@ def get_index() -> SynonymIndex:
 
 
 def _format_stats(stats: BuildStats) -> str:
+    from .about_meta import ADDON_NAME
+
     return (
-        f"Word Synonyms: indexed {stats.indexed} notes, {stats.keys} meaning keys"
+        f"{ADDON_NAME}: indexed {stats.indexed} notes, {stats.keys} meaning keys"
     )
 
 
@@ -450,7 +452,7 @@ def _explain_zero(stats: BuildStats, config: dict[str, Any]) -> None:
     lines.extend(
         [
             "",
-            "Fix: Tools → Synonyms…",
+            "Fix: Tools → Chinese Word Synonyms…",
             "Set Word / Hanzi and Meaning to the fields that hold",
             "your headword and English/definition text,",
             "then Rebuild Index on the General tab.",

@@ -2,6 +2,26 @@
 
 Imported and adapted from sibling **Chinese Character Relations**. Same Anki pitfalls apply; CSS/`pycmd`/menu names differ so both add-ons can coexist.
 
+## About tab Name shows “Chinese Word” (truncated)
+
+**Symptom:** About → Name reads `Chinese Word` instead of `Chinese Word Synonyms`.
+
+**Cause:** `ADDON_NAME` was already correct. The About value `QLabel` used `setWordWrap(True)` inside a scroll area whose content has horizontal `Ignored` size policy, so the name wrapped and the second line (`Synonyms`) was clipped.
+
+**Fix:** `_meta_row` keeps meta values on one line (`setWordWrap(False)`), expanding size policy, tooltip with full text. Dialog min width 520 / resize 560. Menu, window title, and rebuild tooltip read `about_meta.ADDON_NAME`.
+
+---
+
+## Synonyms title larger / left-aligned vs Relatives
+
+**Symptom:** “Synonyms” sits top-left and looks bigger than Relatives’ top-right label.
+
+**Cause:** Title used `--ws-char-size` (Appearance default `1.05em`) instead of Relatives’ fixed `0.9em`, and the heading was alone in a `justify-content: space-between` row (first flex child stays left). Relatives gets right alignment because the character is on the left and the title is the second child.
+
+**Fix:** `.word-synonyms-heading` uses `justify-content: flex-end`; `.word-synonyms-title` uses fixed `font-size: 0.9em` (same as Relatives). Keep `preview/preview.html` in sync.
+
+---
+
 ## Indexed 0 notes, 0 meaning keys
 
 **Symptom:** Rebuild Index tooltip shows `indexed 0 notes, 0 meaning keys`.
@@ -20,7 +40,7 @@ Imported and adapted from sibling **Chinese Character Relations**. Same Anki pit
 - Case-insensitive field match + fallbacks for Word and Meaning.
 - When index stays empty, show a dialog with scan/skip counts and which note types lack fields.
 
-**User action:** Tools → Synonyms… → set **Word / Hanzi** and **Meaning** → **Rebuild Index** on the General tab.
+**User action:** Tools → Chinese Word Synonyms… → set **Word / Hanzi** and **Meaning** → **Rebuild Index** on the General tab.
 
 ---
 
@@ -103,7 +123,7 @@ Imported and adapted from sibling **Chinese Character Relations**. Same Anki pit
 | Concern | Character Relations | Word Synonyms |
 | --- | --- | --- |
 | Package | `chinese_char_relations` | `chinese_word_synonyms` |
-| Tools menu | Character Relations… | Synonyms… |
+| Tools menu | Character Relations… | Chinese Word Synonyms… |
 | Panel id | `#char-relations-panel` | `#word-synonyms-panel` |
 | CSS prefix | `.char-relations*` | `.word-synonyms*` |
 | pycmd | `char_relations_browse:` | `word_synonyms_browse:` |

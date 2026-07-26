@@ -33,13 +33,13 @@ PANEL_CSS = """
 .word-synonyms-heading {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 0.5em;
   margin-bottom: 0.4em;
 }
 .word-synonyms-title {
   font-weight: 700;
-  font-size: var(--ws-char-size, 0.9em);
+  font-size: 0.9em;
   margin: 0;
   line-height: 1;
   flex: 0 0 auto;

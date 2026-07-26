@@ -131,7 +131,7 @@ Unique package, Tools label, `#word-synonyms-panel`, `.word-synonyms*`, `word_sy
 
 | Hook | Purpose |
 | --- | --- |
-| `main_window_did_init` | Tools → Synonyms… |
+| `main_window_did_init` | Tools → Chinese Word Synonyms… |
 | `profile_did_open` | Build index (silent) |
 | `sync_did_finish` | Rebuild + tooltip |
 | `card_will_show` | Primary panel inject |
