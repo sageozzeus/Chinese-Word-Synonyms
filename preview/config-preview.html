@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Word Synonyms — Config UI Preview</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 13px;
+      color: #1a1a1a;
+      background: #d8d4cc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.25rem 1rem 2rem;
+      gap: 0.75rem;
+    }
+    .top-nav {
+      display: flex;
+      gap: 0.75rem;
+      font-size: 0.8rem;
+    }
+    .top-nav a {
+      color: #1a4a8a;
+    }
+    .hint {
+      font-size: 0.78rem;
+      opacity: 0.6;
+      max-width: 32rem;
+      text-align: center;
+      line-height: 1.45;
+    }
+    .config-dialog {
+      width: min(100%, 580px);
+      min-height: 560px;
+      background: #f5f5f5;
+      border: 1px solid #a8a8a8;
+      border-radius: 10px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .dialog-titlebar {
+      padding: 0.55rem 1rem;
+      background: linear-gradient(#ececec, #dcdcdc);
+      border-bottom: 1px solid #b8b8b8;
+      font-weight: 600;
+      font-size: 13px;
+      text-align: center;
+    }
+    .tabs {
+      display: flex;
+      gap: 0;
+      padding: 0.5rem 0.75rem 0;
+      background: #f0f0f0;
+      border-bottom: 1px solid #c8c8c8;
+    }
+    .tab {
+      appearance: none;
+      border: 1px solid transparent;
+      border-bottom: none;
+      background: transparent;
+      padding: 0.45rem 0.85rem;
+      margin: 0;
+      font: inherit;
+      cursor: pointer;
+      border-radius: 6px 6px 0 0;
+      color: #333;
+    }
+    .tab[aria-selected="true"] {
+      background: #fff;
+      border-color: #c8c8c8;
+      font-weight: 600;
+      margin-bottom: -1px;
+      padding-bottom: calc(0.45rem + 1px);
+    }
+    .tab-panel {
+      display: none;
+      flex: 1;
+      overflow: auto;
+      padding: 0.85rem 1rem 1rem;
+      background: #fff;
+    }
+    .tab-panel.is-active {
+      display: block;
+    }
+    .intro {
+      margin: 0 0 0.85rem;
+      line-height: 1.45;
+      color: #333;
+    }
+    .group {
+      border: 1px solid #c4c4c4;
+      border-radius: 6px;
+      margin: 0 0 1.6rem;
+      padding: 0.75rem 0.75rem 0.85rem;
+      background: #fafafa;
+    }
+    .group-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin: 0 0 0.65rem;
+      padding: 0 0.15rem;
+    }
+    .subhint {
+      margin: 0.15rem 0 0.45rem;
+      font-size: 11px;
+      opacity: 0.7;
+    }
+    .about-form {
+      display: grid;
+      grid-template-columns: 7.5rem 1fr;
+      gap: 0.35rem 0.65rem;
+      margin: 0 0 0.55rem;
+      align-items: baseline;
+      justify-content: start;
+      text-align: left;
+    }
+    .about-form dt {
+      margin: 0;
+      text-align: left;
+      color: #444;
+      font-size: 12px;
+    }
+    .about-form dd {
+      margin: 0;
+      text-align: left;
+      word-break: break-word;
+    }
+    .about-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin: 0.35rem 0 0.45rem;
+    }
+    .about-links a.secondary {
+      display: inline-block;
+      text-decoration: none;
+      color: inherit;
+    }
+    .changelog-version {
+      font-weight: 700;
+      margin: 0 0 0.35rem;
+    }
+    .changelog-list {
+      margin: 0 0 0.75rem;
+      padding-left: 1.15rem;
+      line-height: 1.45;
+    }
+    .changelog-list li {
+      margin: 0.2rem 0;
+    }
+    .changelog-older {
+      margin: 0.25rem 0 0;
+      font-size: 11px;
+      opacity: 0.7;
+      line-height: 1.4;
+    }
+    label.row {
+      display: grid;
+      grid-template-columns: 9.5rem 1fr;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.45rem;
+    }
+    label.row > span:first-child {
+      text-align: right;
+      color: #333;
+    }
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      font: inherit;
+      padding: 0.3rem 0.45rem;
+      border: 1px solid #b0b0b0;
+      border-radius: 4px;
+      background: #fff;
+    }
+    .caps-row input[type="number"] {
+      max-width: 6rem;
+    }
+    textarea {
+      min-height: 5.5rem;
+      resize: vertical;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+    }
+    .caps-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.45rem 1rem;
+      margin-bottom: 0.55rem;
+    }
+    .caps-row label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin: 0.35rem 0;
+      padding: 0.2rem 0;
+      min-height: 1.75rem;
+    }
+    .toggle {
+      position: relative;
+      width: 42px;
+      height: 22px;
+      flex: 0 0 auto;
+      align-self: center;
+    }
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+    .toggle .slider {
+      position: absolute;
+      inset: 0;
+      background: #c4c4c4;
+      border: 1px solid #a8a8a8;
+      border-radius: 999px;
+      transition: background 0.15s ease;
+    }
+    .toggle .slider::before {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 1px;
+      top: 1px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      transition: transform 0.15s ease;
+    }
+    .toggle input:checked + .slider {
+      background: #2d6cdf;
+      border-color: #245bb8;
+    }
+    .toggle input:checked + .slider::before {
+      transform: translateX(20px);
+    }
+    .deck-dropdown {
+      position: relative;
+      width: 100%;
+    }
+    .deck-dropdown > button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      text-align: left;
+      font: inherit;
+      min-height: 2rem;
+      padding: 0.35rem 0.55rem 0.35rem 0.65rem;
+      border: 1px solid #b0b0b0;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+    }
+    .deck-dropdown > button::after {
+      content: "▾";
+      flex: 0 0 1.1rem;
+      text-align: center;
+      line-height: 1;
+      opacity: 0.7;
+      font-size: 12px;
+    }
+    .deck-menu {
+      display: none;
+      position: absolute;
+      z-index: 5;
+      left: 0;
+      right: 0;
+      margin-top: 0.25rem;
+      padding: 0.5rem;
+      border: 1px solid #b8b8b8;
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+    .deck-dropdown.is-open .deck-menu {
+      display: block;
+    }
+    .deck-list {
+      list-style: none;
+      margin: 0.35rem 0 0;
+      padding: 0;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      background: #fff;
+      max-height: 140px;
+      overflow: auto;
+    }
+    .deck-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.28rem 0.5rem;
+      border-bottom: 1px solid #ececec;
+    }
+    .deck-list li:last-child {
+      border-bottom: none;
+    }
+    .deck-list.is-disabled {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+    .btn-row {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.45rem;
+    }
+    button.secondary {
+      font: inherit;
+      padding: 0.25rem 0.65rem;
+      border: 1px solid #b0b0b0;
+      border-radius: 4px;
+      background: linear-gradient(#fafafa, #e8e8e8);
+      cursor: pointer;
+    }
+    button.secondary:active {
+      background: #ddd;
+    }
+    a.secondary {
+      font: inherit;
+      padding: 0.25rem 0.65rem;
+      border: 1px solid #b0b0b0;
+      border-radius: 4px;
+      background: linear-gradient(#fafafa, #e8e8e8);
+      cursor: pointer;
+      color: inherit;
+      text-decoration: none;
+    }
+    a.secondary:active {
+      background: #ddd;
+    }
+    .control-grid {
+      display: grid;
+      gap: 0.55rem 0.45rem;
+    }
+    .control-grid.cols-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .control-grid.cols-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .control-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      min-width: 0;
+    }
+    .control-cell .control-label {
+      font-size: 11px;
+      opacity: 0.85;
+      line-height: 1.25;
+      display: block;
+      min-height: 0;
+    }
+    .control-field,
+    .control-cell input[type="text"],
+    .control-cell input[type="number"],
+    .control-cell .color-swatch {
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 2rem;
+      height: 2rem;
+      margin: 0;
+      padding: 0.35rem 0.5rem;
+      font-size: 13px;
+      line-height: 1.2;
+      border: 1px solid #b0b0b0;
+      border-radius: 4px;
+      background: #fff;
+    }
+    .control-cell input[type="number"] {
+      max-width: none;
+    }
+    .control-cell .color-swatch {
+      border-color: #888;
+      font-size: 11px;
+      cursor: pointer;
+      text-align: left;
+      display: inline-flex;
+      align-items: center;
+    }
+    .color-dialog-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      z-index: 20;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .color-dialog-backdrop.is-open {
+      display: flex;
+    }
+    .color-dialog {
+      width: min(100%, 18rem);
+      background: #f8f8f8;
+      border: 1px solid #b0b0b0;
+      border-radius: 8px;
+      padding: 0.85rem;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    }
+    .color-dialog h3 {
+      margin: 0 0 0.65rem;
+      font-size: 13px;
+    }
+    .color-dialog .picker-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 0.65rem;
+    }
+    .color-dialog input[type="color"] {
+      width: 2.75rem;
+      height: 2rem;
+      padding: 0;
+      border: 1px solid #b0b0b0;
+      border-radius: 4px;
+      background: none;
+    }
+    .color-dialog input[type="text"] {
+      flex: 1;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+    }
+    .color-dialog .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.4rem;
+    }
+    .dialog-footer {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 0.85rem;
+      border-top: 1px solid #c8c8c8;
+      background: #f0f0f0;
+    }
+    .dialog-footer .spacer {
+      flex: 1;
+    }
+    button.primary {
+      font: inherit;
+      padding: 0.35rem 1.1rem;
+      border: 1px solid #2d6cdf;
+      border-radius: 4px;
+      background: linear-gradient(#4a8cff, #2d6cdf);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.ghost {
+      font: inherit;
+      padding: 0.35rem 0.9rem;
+      border: 1px solid #b0b0b0;
+      border-radius: 4px;
+      background: #f8f8f8;
+      cursor: pointer;
+    }
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="preview.html">Card UI preview</a>
+    <span aria-hidden="true">·</span>
+    <strong>Config UI preview</strong>
+  </nav>
+  <p class="hint">
+    Static mock of <code>config_dialog.py</code> (General + Appearance + About). Not wired to Anki —
+    use for layout and copy tweaks, then mirror changes in the Qt dialog.
+  </p>
+
+  <div class="config-dialog" role="dialog" aria-labelledby="dlg-title">
+    <div class="dialog-titlebar" id="dlg-title">Chinese Word Synonyms</div>
+
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab" role="tab" id="tab-btn-general" aria-selected="true" aria-controls="tab-general" data-tab="general">General</button>
+      <button type="button" class="tab" role="tab" id="tab-btn-appearance" aria-selected="false" aria-controls="tab-appearance" data-tab="appearance">Appearance</button>
+      <button type="button" class="tab" role="tab" id="tab-btn-about" aria-selected="false" aria-controls="tab-about" data-tab="about">About</button>
+    </div>
+
+    <div id="tab-general" class="tab-panel is-active" role="tabpanel" aria-labelledby="tab-btn-general">
+      <p class="intro">
+        Choose which decks and fields to use for related Chinese words shown on the answer side during review.
+      </p>
+
+      <section class="group">
+        <h2 class="group-title">Decks to scan</h2>
+        <label class="row"><span>Decks</span>
+          <div class="deck-dropdown" id="deck-dropdown">
+            <button type="button" id="deck-summary">All decks</button>
+            <div class="deck-menu" id="deck-menu">
+              <label class="check-row">
+                <input type="checkbox" id="all-decks" checked />
+                <span>All decks</span>
+              </label>
+              <ul class="deck-list is-disabled" id="deck-list">
+                <li><label><input type="checkbox" disabled /><span>Chinese :: HSK 1</span></label></li>
+                <li><label><input type="checkbox" disabled /><span>Chinese :: HSK 2</span></label></li>
+                <li><label><input type="checkbox" disabled /><span>Chinese :: HSK 3</span></label></li>
+                <li><label><input type="checkbox" disabled /><span>Chinese :: Sentences</span></label></li>
+                <li><label><input type="checkbox" disabled /><span>Chinese :: Reading</span></label></li>
+              </ul>
+              <div class="btn-row">
+                <button type="button" class="secondary" id="deck-select-all" disabled>Select all</button>
+                <button type="button" class="secondary" id="deck-select-none" disabled>Select none</button>
+              </div>
+            </div>
+          </div>
+        </label>
+        <p class="subhint">Open the menu to choose decks. Leave on All decks to scan everything.</p>
+      </section>
+
+      <section class="group">
+        <h2 class="group-title">Note fields</h2>
+        <label class="row"><span>Word / Hanzi</span>
+          <input type="text" value="Word" list="field-suggestions" />
+        </label>
+        <label class="row"><span>Pinyin</span>
+          <input type="text" value="Pinyin" list="field-suggestions" />
+        </label>
+        <p class="subhint">Pick from your note types, or type a custom field name.</p>
+        <datalist id="field-suggestions">
+          <option value="Word"></option>
+          <option value="Hanzi"></option>
+          <option value="Expression"></option>
+          <option value="Pinyin"></option>
+        </datalist>
+      </section>
+
+      <section class="group">
+        <h2 class="group-title">Display options</h2>
+        <div class="caps-row">
+          <label>Max synonyms <input type="number" min="1" max="50" value="8" /></label>
+          <label>Min word length <input type="number" min="1" max="10" value="2" /></label>
+        </div>
+        <div class="toggle-row">
+          <span>Include suspended notes</span>
+          <label class="toggle"><input type="checkbox" checked /><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <span>Show only on back</span>
+          <label class="toggle"><input type="checkbox" checked /><span class="slider"></span></label>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2 class="group-title">Index</h2>
+        <p class="subhint">
+          Rebuild after changing decks or fields, or when new notes should appear in Synonyms.
+          Appearance changes do not need a rebuild.
+        </p>
+        <div class="btn-row">
+          <button type="button" class="secondary">Rebuild Index</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="tab-appearance" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-appearance" hidden>
+      <p class="intro">
+        Customize how the Synonyms panel looks on the card. Changes apply on the next answer flip (no rebuild needed).
+        Use max width like 100%, 36em, or 650px to match your card template.
+      </p>
+
+      <section class="group">
+        <h2 class="group-title">Layout</h2>
+        <div class="control-grid cols-3">
+          <div class="control-cell">
+            <span class="control-label">Max width</span>
+            <input type="text" value="100%" placeholder="100%  ·  36em  ·  650px" />
+          </div>
+          <div class="control-cell">
+            <span class="control-label">Corner radius (px)</span>
+            <input type="number" min="0" max="40" value="12" />
+          </div>
+          <div class="control-cell">
+            <span class="control-label">Card gaps (em)</span>
+            <input type="number" min="0.2" max="2" step="0.05" value="0.65" />
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2 class="group-title">Type size</h2>
+        <div class="control-grid cols-3">
+          <div class="control-cell">
+            <span class="control-label">Title (em)</span>
+            <input type="number" min="0.4" max="2.5" step="0.01" value="1.05" />
+          </div>
+          <div class="control-cell">
+            <span class="control-label">Synonym word (em)</span>
+            <input type="number" min="0.4" max="2.5" step="0.01" value="0.82" />
+          </div>
+          <div class="control-cell">
+            <span class="control-label">Pinyin (em)</span>
+            <input type="number" min="0.4" max="2.5" step="0.01" value="0.62" />
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2 class="group-title">Colors</h2>
+        <div class="control-grid cols-4">
+          <div class="control-cell"><span class="control-label">Background (light)</span><button type="button" class="color-swatch" data-hex="#e4ecf6" style="background:#e4ecf6;color:#111">#e4ecf6</button></div>
+          <div class="control-cell"><span class="control-label">Background (dark)</span><button type="button" class="color-swatch" data-hex="#2a303a" style="background:#2a303a;color:#eee">#2a303a</button></div>
+          <div class="control-cell"><span class="control-label">Border (light)</span><button type="button" class="color-swatch" data-hex="#b0b0b0" style="background:#b0b0b0;color:#111">#b0b0b0</button></div>
+          <div class="control-cell"><span class="control-label">Border (dark)</span><button type="button" class="color-swatch" data-hex="#5a5a5a" style="background:#5a5a5a;color:#eee">#5a5a5a</button></div>
+          <div class="control-cell"><span class="control-label">Mature (light)</span><button type="button" class="color-swatch" data-hex="#2e7d32" style="background:#2e7d32;color:#eee">#2e7d32</button></div>
+          <div class="control-cell"><span class="control-label">Mature (dark)</span><button type="button" class="color-swatch" data-hex="#81c784" style="background:#81c784;color:#111">#81c784</button></div>
+          <div class="control-cell"><span class="control-label">Suspended (light)</span><button type="button" class="color-swatch" data-hex="#c62828" style="background:#c62828;color:#eee">#c62828</button></div>
+          <div class="control-cell"><span class="control-label">Suspended (dark)</span><button type="button" class="color-swatch" data-hex="#ef9a9a" style="background:#ef9a9a;color:#111">#ef9a9a</button></div>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2 class="group-title">Custom CSS (advanced)</h2>
+        <p class="subhint">
+          Optional extra CSS appended after the built-in panel styles. Target .word-synonyms, .word-synonyms-group, etc.
+        </p>
+        <textarea placeholder=".word-synonyms-group {&#10;  /* your rules */&#10;}"></textarea>
+      </section>
+    </div>
+
+    <div id="tab-about" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-about" hidden>
+      <p class="intro">
+        Add-on info, support links, and recent changes. Nothing on this tab is saved with your settings.
+      </p>
+
+      <section class="group">
+        <h2 class="group-title">Add-on</h2>
+        <dl class="about-form">
+          <dt>Name</dt>
+          <dd>Chinese Word Synonyms</dd>
+          <dt>Version</dt>
+          <dd>0.1.0</dd>
+          <dt>Requires Anki</dt>
+          <dd>23.10+</dd>
+          <dt>License</dt>
+          <dd>MIT</dd>
+        </dl>
+        <p class="subhint">After deck or field changes, rebuild the index on the General tab.</p>
+        <p class="subhint">AnkiWeb listing coming soon</p>
+      </section>
+
+      <section class="group">
+        <h2 class="group-title">Author &amp; support</h2>
+        <dl class="about-form">
+          <dt>Author</dt>
+          <dd>Ozzeus</dd>
+        </dl>
+        <div class="about-links">
+          <a class="secondary" href="https://github.com/sageozzeus/Chinese-Character-Relations/issues" target="_blank" rel="noopener noreferrer">Report a bug</a>
+          <a class="secondary" href="https://github.com/sageozzeus/Chinese-Character-Relations" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a class="secondary" href="https://x.com/sageozzeus" target="_blank" rel="noopener noreferrer">X</a>
+        </div>
+        <p class="subhint">
+          Please file bugs on GitHub so they don’t get lost. Short questions welcome on X.
+        </p>
+      </section>
+
+      <section class="group">
+        <h2 class="group-title">Changelog</h2>
+        <p class="changelog-version">v0.1.0</p>
+        <ul class="changelog-list">
+          <li>Related words from your own deck by shared Chinese characters</li>
+          <li>General and Appearance settings GUI (no JSON editing)</li>
+          <li>Click a related word to open it in the Browser</li>
+          <li>Light/dark panel colors and optional custom CSS</li>
+          <li>Rebuild Index from Tools → Word Synonyms…</li>
+        </ul>
+      </section>
+    </div>
+
+    <footer class="dialog-footer">
+      <button type="button" class="ghost">Restore defaults</button>
+      <span class="spacer"></span>
+      <button type="button" class="ghost">Cancel</button>
+      <button type="button" class="primary">Save</button>
+    </footer>
+  </div>
+
+  <div class="color-dialog-backdrop" id="color-dialog-backdrop" hidden>
+    <div class="color-dialog" role="dialog" aria-labelledby="color-dialog-title">
+      <h3 id="color-dialog-title">Pick color</h3>
+      <div class="picker-row">
+        <input type="color" id="color-native" value="#e4ecf6" />
+        <input type="text" id="color-hex" value="#e4ecf6" maxlength="7" spellcheck="false" />
+      </div>
+      <div class="dialog-actions">
+        <button type="button" class="ghost" id="color-cancel">Cancel</button>
+        <button type="button" class="primary" id="color-apply">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var tabs = document.querySelectorAll(".tab");
+      var panels = {
+        general: document.getElementById("tab-general"),
+        appearance: document.getElementById("tab-appearance"),
+        about: document.getElementById("tab-about"),
+      };
+      tabs.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var id = btn.getAttribute("data-tab");
+          tabs.forEach(function (t) {
+            var on = t === btn;
+            t.setAttribute("aria-selected", on ? "true" : "false");
+          });
+          Object.keys(panels).forEach(function (key) {
+            var panel = panels[key];
+            var active = key === id;
+            panel.classList.toggle("is-active", active);
+            panel.hidden = !active;
+          });
+        });
+      });
+
+      var allDecks = document.getElementById("all-decks");
+      var deckList = document.getElementById("deck-list");
+      var deckDropdown = document.getElementById("deck-dropdown");
+      var deckSummary = document.getElementById("deck-summary");
+      var deckSelectAll = document.getElementById("deck-select-all");
+      var deckSelectNone = document.getElementById("deck-select-none");
+
+      function deckChecks() {
+        return Array.prototype.slice.call(
+          deckList.querySelectorAll('input[type="checkbox"]')
+        );
+      }
+
+      function syncDeckSummary() {
+        if (allDecks.checked) {
+          deckSummary.textContent = "All decks";
+          return;
+        }
+        var picked = deckChecks().filter(function (cb) { return cb.checked; });
+        if (!picked.length) {
+          deckSummary.textContent = "No decks selected";
+        } else if (picked.length === 1) {
+          deckSummary.textContent = picked[0].parentElement.textContent.trim();
+        } else {
+          deckSummary.textContent = picked.length + " decks selected";
+        }
+      }
+
+      function syncDecks() {
+        var on = allDecks.checked;
+        deckList.classList.toggle("is-disabled", on);
+        deckSelectAll.disabled = on;
+        deckSelectNone.disabled = on;
+        deckChecks().forEach(function (cb) {
+          cb.disabled = on;
+          if (on) { cb.checked = false; }
+        });
+        syncDeckSummary();
+      }
+
+      deckSummary.addEventListener("click", function () {
+        deckDropdown.classList.toggle("is-open");
+      });
+      document.addEventListener("click", function (e) {
+        if (!deckDropdown.contains(e.target)) {
+          deckDropdown.classList.remove("is-open");
+        }
+      });
+      allDecks.addEventListener("change", syncDecks);
+      deckChecks().forEach(function (cb) {
+        cb.addEventListener("change", function () {
+          if (cb.checked) { allDecks.checked = false; }
+          syncDecks();
+        });
+      });
+      deckSelectAll.addEventListener("click", function () {
+        allDecks.checked = false;
+        deckChecks().forEach(function (cb) { cb.checked = true; cb.disabled = false; });
+        syncDecks();
+      });
+      deckSelectNone.addEventListener("click", function () {
+        allDecks.checked = false;
+        deckChecks().forEach(function (cb) { cb.checked = false; cb.disabled = false; });
+        syncDecks();
+      });
+      syncDecks();
+
+      if (window.location.hash === "#appearance") {
+        document.getElementById("tab-btn-appearance").click();
+      } else if (window.location.hash === "#about") {
+        document.getElementById("tab-btn-about").click();
+      }
+
+      var colorBackdrop = document.getElementById("color-dialog-backdrop");
+      var colorNative = document.getElementById("color-native");
+      var colorHex = document.getElementById("color-hex");
+      var colorApply = document.getElementById("color-apply");
+      var colorCancel = document.getElementById("color-cancel");
+      var activeSwatch = null;
+
+      function normalizeHex(raw) {
+        var v = (raw || "").trim();
+        if (!v) { return ""; }
+        if (v.charAt(0) !== "#") { v = "#" + v; }
+        return /^#[0-9A-Fa-f]{6}$/.test(v) ? v.toLowerCase() : "";
+      }
+
+      function textOn(hex) {
+        var r = parseInt(hex.slice(1, 3), 16);
+        var g = parseInt(hex.slice(3, 5), 16);
+        var b = parseInt(hex.slice(5, 7), 16);
+        var lum = (0.299 * r + 0.587 * g + 0.114 * b);
+        return lum > 160 ? "#111" : "#eee";
+      }
+
+      function applySwatch(btn, hex) {
+        btn.dataset.hex = hex;
+        btn.textContent = hex;
+        btn.style.background = hex;
+        btn.style.color = textOn(hex);
+      }
+
+      function openColorDialog(btn) {
+        activeSwatch = btn;
+        var hex = normalizeHex(btn.dataset.hex || btn.textContent) || "#ffffff";
+        colorNative.value = hex;
+        colorHex.value = hex;
+        colorBackdrop.hidden = false;
+        colorBackdrop.classList.add("is-open");
+        colorHex.focus();
+        colorHex.select();
+      }
+
+      function closeColorDialog() {
+        colorBackdrop.classList.remove("is-open");
+        colorBackdrop.hidden = true;
+        activeSwatch = null;
+      }
+
+      document.querySelectorAll(".color-swatch").forEach(function (btn) {
+        btn.addEventListener("click", function () { openColorDialog(btn); });
+      });
+      colorNative.addEventListener("input", function () {
+        colorHex.value = colorNative.value.toLowerCase();
+      });
+      colorHex.addEventListener("input", function () {
+        var hex = normalizeHex(colorHex.value);
+        if (hex) { colorNative.value = hex; }
+      });
+      colorApply.addEventListener("click", function () {
+        var hex = normalizeHex(colorHex.value);
+        if (!hex || !activeSwatch) { return; }
+        applySwatch(activeSwatch, hex);
+        closeColorDialog();
+      });
+      colorCancel.addEventListener("click", closeColorDialog);
+      colorBackdrop.addEventListener("click", function (e) {
+        if (e.target === colorBackdrop) { closeColorDialog(); }
+      });
+    })();
+  </script>
+</body>
+</html>

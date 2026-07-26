@@ -1,0 +1,43 @@
+# Chinese Word Synonyms — Config
+
+Settings are edited in a **GUI dialog** (no JSON editing required):
+
+- **Tools → Synonyms…**
+- or **Tools → Add-ons → Chinese Word Synonyms → Config**
+
+## General tab
+
+| Setting | Default | Meaning |
+| --- | --- | --- |
+| Decks | All decks | Dropdown with checkboxes; empty list in storage = all decks |
+| Word / Hanzi field | `Word` | Headword field on notes |
+| Pinyin field | `Pinyin` | Reading (optional) |
+| Meaning field | `Meaning` | Definition / English gloss used for synonym matching (required) |
+| Max synonyms | `12` | Cap on synonyms shown in the panel |
+| Include suspended | yes | Show notes whose cards are all suspended |
+| Min word length | `1` | Minimum CJK length for synonym candidates |
+| Show only on back | yes | Off = show synonyms on front and back during review |
+| Rebuild Index | button | Scans decks and refreshes the meaning → notes index |
+
+After changing decks or fields, rebuild when prompted (or use **Rebuild Index** on this tab).
+
+Advanced meaning-normalization knobs (`meaning_split_delimiters`, `min_key_length`, `ignore_keys`, `strip_leading_to`) live in config defaults and are preserved on Save; edit via Add-ons config storage if you need to tweak them.
+
+## Appearance tab
+
+Customize Synonyms panel look. Applies on the next answer flip (no rebuild).
+
+| Setting | Default | Notes |
+| --- | --- | --- |
+| Max width | `100%` | e.g. `100%`, `36em`, `650px` — match your card template |
+| Corner radius | `12` px | |
+| Gap between cards | `0.65` em | Label in UI: **Card gaps** |
+| Type sizes | title / word / pinyin | Relative `em` sizes |
+| Colors | light + dark | 4×2 grid; background, border, mature, suspended |
+| Custom CSS | empty | Advanced overrides for `.word-synonyms*` |
+
+## About tab
+
+Read-only. Version, license, changelog, and links (GitHub Issues for bugs, GitHub repo, X). AnkiWeb / Rate links appear after `URL_ANKIWEB` is set in `about_meta.py`.
+
+`config.json` supplies defaults for first install. User values live in `meta.json`.

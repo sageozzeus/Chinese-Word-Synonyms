@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Anki — user-local only (never ship)
+# Written when Anki saves settings via the symlink install path
+meta.json
+*.ankiaddon
+*.ankiaddon.zip
+
+# Secrets / local env
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets/
+.op/
+
+# OS junk
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Desktop.ini
+Icon?
+
+# Editors / IDE / agent
+.cursor/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Local scratch
+*.local
+.scratch/
+tmp/
+temp/

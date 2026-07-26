@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Word Synonyms — UI Preview</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", sans-serif;
+      background: #e8e4dc;
+      color: #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 3rem;
+      gap: 1.5rem;
+    }
+    .hint {
+      font-size: 0.8rem;
+      opacity: 0.55;
+      max-width: 40em;
+      text-align: center;
+    }
+    .top-nav { font-size: 0.8rem; }
+    .top-nav a { color: #1a4a8a; }
+    .previews {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+      width: 100%;
+    }
+    .preview-col { width: min(100%, 22rem); }
+    .preview-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      margin-bottom: 0.5rem;
+    }
+    #qa-light {
+      background: rgba(255,255,255,0.72);
+      padding: 2rem 1.5rem 1.5rem;
+      border-radius: 2px;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+      color: #1a1a1a;
+    }
+    #qa-dark {
+      background: #2c2c2c;
+      padding: 2rem 1.5rem 1.5rem;
+      border-radius: 2px;
+      color: #e8e8e8;
+    }
+    .card-answer { text-align: center; margin-bottom: 0.5rem; }
+    .card-answer .hanzi {
+      font-size: 2.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+    .card-answer .reading {
+      margin-top: 0.35rem;
+      opacity: 0.7;
+      font-size: 1.05rem;
+    }
+    .card-answer .gloss {
+      margin-top: 0.5rem;
+      opacity: 0.85;
+    }
+
+    /*
+      === KEEP IN SYNC with chinese_word_synonyms/render.py PANEL_CSS ===
+    */
+    .word-synonyms {
+      margin: 1.25em auto 0;
+      max-width: 36em;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75em;
+      text-align: left;
+      font-size: 0.92em;
+      line-height: 1.35;
+      color: inherit;
+      box-sizing: border-box;
+      padding: 0.75em 0.9em 0.85em;
+      border: 1px solid rgba(120, 120, 120, 0.28);
+      border-radius: 12px;
+      background: #e4ecf6;
+      box-shadow: 0 3px 8px rgba(40, 35, 30, 0.07);
+    }
+    .word-synonyms-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.5em;
+      margin-bottom: 0.4em;
+    }
+    .word-synonyms-title {
+      font-weight: 700;
+      font-size: 0.9em;
+      margin: 0;
+      line-height: 1;
+      flex: 0 0 auto;
+      color: #1a3a6b;
+    }
+    .word-synonyms-group { box-sizing: border-box; }
+    .word-synonyms-scroll { position: relative; margin: 0; }
+    .word-synonyms-items {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 0.55em 0.95em;
+      align-items: flex-end;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 0.1em 0;
+      scroll-behavior: smooth;
+    }
+    .word-synonyms-items::-webkit-scrollbar { display: none; width: 0; height: 0; }
+    .word-synonyms-item {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.08em;
+      white-space: nowrap;
+      flex: 0 0 auto;
+      color: inherit;
+      cursor: pointer;
+    }
+    .word-synonyms-item:hover .word-synonyms-word {
+      text-decoration: underline;
+      text-underline-offset: 0.12em;
+    }
+    .word-synonyms-pinyin {
+      font-size: 0.62em;
+      font-weight: 400;
+      opacity: 0.65;
+      line-height: 1.15;
+    }
+    .word-synonyms-word {
+      font-weight: 400;
+      font-size: 0.82em;
+      line-height: 1.2;
+    }
+    .word-synonyms-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      box-sizing: border-box;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.35em;
+      height: 1.35em;
+      padding: 0;
+      margin: 0;
+      border: 1px solid rgba(120, 120, 120, 0.28);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.92);
+      color: inherit;
+      font-size: 0.95em;
+      line-height: 0;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+      box-shadow: 0 2px 6px rgba(40, 35, 30, 0.08);
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .word-synonyms-arrow::before {
+      content: "";
+      display: block;
+      width: 0.36em;
+      height: 0.36em;
+      box-sizing: border-box;
+      border: solid currentColor;
+      border-width: 0 0 0.13em 0.13em;
+    }
+    .word-synonyms-arrow-left::before { transform: rotate(45deg); }
+    .word-synonyms-arrow-right::before {
+      border-width: 0.13em 0.13em 0 0;
+      transform: rotate(45deg);
+    }
+    .word-synonyms-arrow-left { left: 0; }
+    .word-synonyms-arrow-right { right: 0; }
+    .word-synonyms-group:hover .word-synonyms-scroll.is-scrollable .word-synonyms-arrow {
+      opacity: 0.85;
+      pointer-events: auto;
+    }
+    .word-synonyms-group:hover .word-synonyms-scroll.is-scrollable .word-synonyms-arrow:hover {
+      opacity: 1;
+    }
+    .word-synonyms-item.is-mature,
+    .word-synonyms-item.is-mature .word-synonyms-pinyin,
+    .word-synonyms-item.is-mature .word-synonyms-word { color: #2e7d32; }
+    .word-synonyms-item.is-mature .word-synonyms-pinyin { opacity: 0.85; }
+    .word-synonyms-item.is-suspended,
+    .word-synonyms-item.is-suspended .word-synonyms-pinyin,
+    .word-synonyms-item.is-suspended .word-synonyms-word { color: #c62828; }
+    .word-synonyms-item.is-suspended .word-synonyms-pinyin { opacity: 0.85; }
+
+    .nightMode .word-synonyms,
+    .night-mode .word-synonyms {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: #2a303a;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.28);
+    }
+    .nightMode .word-synonyms-title,
+    .night-mode .word-synonyms-title { color: #b8dcff; }
+    .nightMode .word-synonyms-pinyin,
+    .night-mode .word-synonyms-pinyin { opacity: 0.65; }
+    .nightMode .word-synonyms-arrow,
+    .night-mode .word-synonyms-arrow {
+      border-color: rgba(255, 255, 255, 0.18);
+      background: rgba(48, 50, 56, 0.95);
+      color: #e8e8e8;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    .nightMode .word-synonyms-item.is-mature,
+    .nightMode .word-synonyms-item.is-mature .word-synonyms-pinyin,
+    .nightMode .word-synonyms-item.is-mature .word-synonyms-word,
+    .night-mode .word-synonyms-item.is-mature,
+    .night-mode .word-synonyms-item.is-mature .word-synonyms-pinyin,
+    .night-mode .word-synonyms-item.is-mature .word-synonyms-word { color: #81c784; }
+    .nightMode .word-synonyms-item.is-suspended,
+    .nightMode .word-synonyms-item.is-suspended .word-synonyms-pinyin,
+    .nightMode .word-synonyms-item.is-suspended .word-synonyms-word,
+    .night-mode .word-synonyms-item.is-suspended,
+    .night-mode .word-synonyms-item.is-suspended .word-synonyms-pinyin,
+    .night-mode .word-synonyms-item.is-suspended .word-synonyms-word { color: #ef9a9a; }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <strong>Card UI preview</strong>
+    <span aria-hidden="true"> · </span>
+    <a href="config-preview.html">Config UI preview</a>
+  </nav>
+  <p class="hint">
+    Narrow cards force overflow. Hover the synonyms row — edge arrows appear when scrollable.
+    No scrollbar. Trackpad / shift-scroll also works.
+  </p>
+
+  <div class="previews">
+    <div class="preview-col">
+      <div class="preview-label">Light</div>
+      <div id="qa-light">
+        <div class="card-answer">
+          <div class="hanzi">快乐</div>
+          <div class="reading">kuàilè</div>
+          <div class="gloss">happy; glad</div>
+        </div>
+        <div class="word-synonyms" id="word-synonyms-panel">
+          <div class="word-synonyms-group">
+            <div class="word-synonyms-heading">
+              <div class="word-synonyms-title">Synonyms</div>
+            </div>
+            <div class="word-synonyms-scroll">
+              <button type="button" class="word-synonyms-arrow word-synonyms-arrow-left" aria-label="Scroll left"></button>
+              <div class="word-synonyms-items">
+                <span class="word-synonyms-item is-mature" data-nid="1"><span class="word-synonyms-pinyin">gāoxìng</span><span class="word-synonyms-word">高兴</span></span>
+                <span class="word-synonyms-item is-mature" data-nid="2"><span class="word-synonyms-pinyin">kāixīn</span><span class="word-synonyms-word">开心</span></span>
+                <span class="word-synonyms-item"><span class="word-synonyms-pinyin">yúkuài</span><span class="word-synonyms-word">愉快</span></span>
+                <span class="word-synonyms-item"><span class="word-synonyms-pinyin">xǐyuè</span><span class="word-synonyms-word">喜悦</span></span>
+                <span class="word-synonyms-item"><span class="word-synonyms-pinyin">huānxǐ</span><span class="word-synonyms-word">欢喜</span></span>
+                <span class="word-synonyms-item is-suspended" data-nid="3"><span class="word-synonyms-pinyin">xīngfèn</span><span class="word-synonyms-word">兴奋</span></span>
+              </div>
+              <button type="button" class="word-synonyms-arrow word-synonyms-arrow-right" aria-label="Scroll right"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-col">
+      <div class="preview-label">Dark (night mode)</div>
+      <div id="qa-dark" class="nightMode">
+        <div class="card-answer">
+          <div class="hanzi">快乐</div>
+          <div class="reading">kuàilè</div>
+          <div class="gloss">happy; glad</div>
+        </div>
+        <div class="word-synonyms">
+          <div class="word-synonyms-group">
+            <div class="word-synonyms-heading">
+              <div class="word-synonyms-title">Synonyms</div>
+            </div>
+            <div class="word-synonyms-scroll">
+              <button type="button" class="word-synonyms-arrow word-synonyms-arrow-left" aria-label="Scroll left"></button>
+              <div class="word-synonyms-items">
+                <span class="word-synonyms-item is-mature"><span class="word-synonyms-pinyin">gāoxìng</span><span class="word-synonyms-word">高兴</span></span>
+                <span class="word-synonyms-item is-mature"><span class="word-synonyms-pinyin">kāixīn</span><span class="word-synonyms-word">开心</span></span>
+                <span class="word-synonyms-item"><span class="word-synonyms-pinyin">yúkuài</span><span class="word-synonyms-word">愉快</span></span>
+                <span class="word-synonyms-item"><span class="word-synonyms-pinyin">xǐyuè</span><span class="word-synonyms-word">喜悦</span></span>
+                <span class="word-synonyms-item"><span class="word-synonyms-pinyin">huānxǐ</span><span class="word-synonyms-word">欢喜</span></span>
+                <span class="word-synonyms-item is-suspended"><span class="word-synonyms-pinyin">xīngfèn</span><span class="word-synonyms-word">兴奋</span></span>
+              </div>
+              <button type="button" class="word-synonyms-arrow word-synonyms-arrow-right" aria-label="Scroll right"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    function refresh(wrap) {
+      var track = wrap.querySelector(".word-synonyms-items");
+      if (!track) return;
+      var can = track.scrollWidth > track.clientWidth + 2;
+      wrap.classList.toggle("is-scrollable", can);
+    }
+    function bindScroll(wrap) {
+      if (wrap.getAttribute("data-ws-bound") === "1") {
+        refresh(wrap);
+        return;
+      }
+      wrap.setAttribute("data-ws-bound", "1");
+      var track = wrap.querySelector(".word-synonyms-items");
+      var left = wrap.querySelector(".word-synonyms-arrow-left");
+      var right = wrap.querySelector(".word-synonyms-arrow-right");
+      if (!track || !left || !right) return;
+      left.addEventListener("click", function (e) {
+        e.preventDefault();
+        track.scrollBy({ left: -160, behavior: "smooth" });
+      });
+      right.addEventListener("click", function (e) {
+        e.preventDefault();
+        track.scrollBy({ left: 160, behavior: "smooth" });
+      });
+      track.addEventListener("scroll", function () { refresh(wrap); });
+      if (window.ResizeObserver) {
+        new ResizeObserver(function () { refresh(wrap); }).observe(track);
+      }
+      refresh(wrap);
+    }
+    document.querySelectorAll(".word-synonyms-scroll").forEach(bindScroll);
+  })();
+  </script>
+</body>
+</html>
