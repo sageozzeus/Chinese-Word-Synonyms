@@ -60,7 +60,7 @@ chinese-word-synonyms/
 │   ├── MAINTENANCE.md          # This file
 │   ├── TESTING.md              # Manual QA checklist
 │   ├── BUG_SOLUTIONS.md        # Known fixes / Qt gotchas
-│   └── media/                  # README / AnkiWeb screenshots (cropped PNGs)
+│   └── media/                  # README / AnkiWeb screenshots (cropped PNGs; grid composite for AnkiWeb)
 ├── tests/
 │   └── test_meaning.py         # Meaning normalizer unit tests
 ├── scripts/
