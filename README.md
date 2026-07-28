@@ -8,6 +8,21 @@ Works offline. Uses only your collection — no external dictionary, no AnkiConn
 
 Pairs well with **[Chinese Character Relations](https://github.com/sageozzeus/Chinese-Character-Relations)** (shared characters). Both can be installed together; they use separate menus, indexes, panel IDs, and `pycmd` prefixes.
 
+## Screenshots
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img src="docs/media/review-front-count.png" alt="Question side: synonym count pill (e.g. 1 Synonym)" />
+      <br /><sub>Question — synonym count</sub>
+    </td>
+    <td width="50%" align="center">
+      <img src="docs/media/review-back-synonyms.png" alt="Answer side: Synonyms panel with related words from your deck" />
+      <br /><sub>Answer — Synonyms panel</sub>
+    </td>
+  </tr>
+</table>
+
 ## Requirements
 
 - Anki Desktop **23.10+** (Qt6 preferred)

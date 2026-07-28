@@ -9,7 +9,7 @@ rm -f "$OUT"
 (
   cd chinese_word_synonyms
   zip -r "../$OUT" . \
-    -x '*/__pycache__/*' '*.pyc' 'meta.json' '.DS_Store' '*/.DS_Store'
+    -x '__pycache__/*' '*/__pycache__/*' '*.pyc' 'meta.json' '.DS_Store' '*/.DS_Store'
 )
 echo "Built $OUT"
 unzip -l "$OUT" | head -n 20
