@@ -31,18 +31,25 @@ Pairs well with **[Chinese Character Relations](https://github.com/sageozzeus/Ch
 
 ## Install
 
-### From GitHub (recommended until AnkiWeb is live)
+### From AnkiWeb (recommended)
+
+1. **Tools → Add-ons → Get Add-ons…**
+2. Paste download code: **`1733540881`**
+3. Restart Anki when prompted.
+
+Or open the [AnkiWeb listing](https://ankiweb.net/shared/info/1733540881) and click **Download**.
+
+### From GitHub Release
 
 1. Open the latest [Release](https://github.com/sageozzeus/Chinese-Word-Synonyms/releases/latest).
 2. Download the **`.ankiaddon`** asset (e.g. `chinese_word_synonyms-0.1.1.ankiaddon`), not Source code.
 3. Double-click the file, or open it with Anki / drag it onto the Anki window.
 4. Restart Anki when prompted.
-5. Open **Tools → Chinese Word Synonyms…**
-6. On the **General** tab, set Word / Hanzi, Meaning (and optional Pinyin) fields, then click **Rebuild Index**.
 
-### From AnkiWeb
+### After install
 
-When the listing is live: **Tools → Add-ons → Get Add-ons…**, search for *Chinese Word Synonyms*, or open the listing from the About tab after install.
+1. Open **Tools → Chinese Word Synonyms…**
+2. On the **General** tab, set Word / Hanzi, Meaning (and optional Pinyin) fields, then click **Rebuild Index**.
 
 ### Manual (developers)
 
@@ -64,7 +71,7 @@ Or copy the `chinese_word_synonyms` folder into your Anki add-ons folder, then r
 | --- | --- |
 | **General** | Decks, Word / Meaning fields, display limits (max synonyms, **Show only on back**, **Show synonym counts**), **Rebuild Index** |
 | **Appearance** | Panel width, type sizes, colors, optional custom CSS |
-| **About** | Version, changelog, bug reports, links |
+| **About** | Version, changelog, [AnkiWeb](https://ankiweb.net/shared/info/1733540881) / Rate links, bug reports |
 
 **Display options (General):** With default **Show only on back**, the question side shows a small count pill (e.g. `4 Synonyms`) when **Show synonym counts** is on; the full Synonyms panel appears on the answer. Turn off **Show synonym counts** to hide the front pill. Turn off **Show only on back** to show the full panel on both sides (no pill).
 
@@ -86,6 +93,7 @@ Meaning text is normalized into keys: strip HTML, lowercase, drop POS prefixes (
 
 ## Support
 
+- **AnkiWeb:** [listing](https://ankiweb.net/shared/info/1733540881) · download code `1733540881`
 - **Bugs:** [GitHub Issues](https://github.com/sageozzeus/Chinese-Word-Synonyms/issues)
 - **Updates / short questions:** [X @sageozzeus](https://x.com/sageozzeus)
 - **Source:** [github.com/sageozzeus/Chinese-Word-Synonyms](https://github.com/sageozzeus/Chinese-Word-Synonyms)

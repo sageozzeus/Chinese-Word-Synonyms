@@ -20,8 +20,9 @@ Small update to **Chinese Word Synonyms**, the offline add-on that shows synonym
 
 Pairs well with [Chinese Character Relations](https://github.com/sageozzeus/Chinese-Character-Relations) (shared characters vs shared meanings). Both can run together.
 
-**Install:** download `chinese_word_synonyms-0.1.1.ankiaddon` from the latest GitHub Release, double-click or drag onto Anki, restart, then **Tools → Chinese Word Synonyms…** → set Word + Meaning fields → **Rebuild Index**.
+**Install:** **Tools → Add-ons → Get Add-ons…** → code `1733540881`, or [AnkiWeb](https://ankiweb.net/shared/info/1733540881) → Download. Restart Anki, then **Tools → Chinese Word Synonyms…** → set Word + Meaning fields → **Rebuild Index**.
 
+- AnkiWeb: https://ankiweb.net/shared/info/1733540881 (code `1733540881`)
 - Release: https://github.com/sageozzeus/Chinese-Word-Synonyms/releases/latest
 - Issues: https://github.com/sageozzeus/Chinese-Word-Synonyms/issues
 

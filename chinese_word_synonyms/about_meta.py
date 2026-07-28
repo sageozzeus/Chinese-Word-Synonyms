@@ -19,8 +19,9 @@ LICENSE = "MIT"
 URL_GITHUB = "https://github.com/sageozzeus/Chinese-Word-Synonyms"
 URL_ISSUES = URL_GITHUB + "/issues"
 URL_X = "https://x.com/sageozzeus"
-# Set after AnkiWeb publish, e.g. "https://ankiweb.net/shared/info/<id>"
-URL_ANKIWEB = ""
+URL_ANKIWEB = "https://ankiweb.net/shared/info/1733540881"
+# Tools → Add-ons → Get Add-ons… (same numeric id as the listing URL)
+ANKIWEB_CODE = "1733540881"
 
 # Newest first. Keep the latest entry to ~5 bullets for the About dialog.
 CHANGELOG: List[Tuple[str, List[str]]] = [

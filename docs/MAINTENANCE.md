@@ -187,7 +187,7 @@ gh release create "v${VERSION}" "$OUT" --title "v${VERSION}" --notes-file -
 
 If the release already exists: `gh release upload "v${VERSION}" "$OUT" --clobber`
 
-README install link uses `/releases/latest` (no edit needed per version).
+README install: AnkiWeb code `ANKIWEB_CODE` and `URL_ANKIWEB` in `about_meta.py`; GitHub `/releases/latest` (no edit needed per version).
 
 ## Automated tests (no Anki)
 
