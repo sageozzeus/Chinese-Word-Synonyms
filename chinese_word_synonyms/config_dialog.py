@@ -773,9 +773,17 @@ class ConfigDialog(QDialog):
 
         self.back_only_toggle = ToggleSwitch()
         self.back_only_toggle.setToolTip(
-            "On: synonyms only on the card back. Off: show on front and back."
+            "On: full Synonyms panel on the card back only. "
+            "Off: show the full panel on front and back."
         )
         _add_toggle_row(layout, "Show only on back", self.back_only_toggle)
+
+        self.show_synonym_counts_toggle = ToggleSwitch()
+        self.show_synonym_counts_toggle.setToolTip(
+            "On: show a small pill on the card front with how many synonyms exist "
+            "(when Show only on back is on). Off: no count on the front."
+        )
+        _add_toggle_row(layout, "Show synonym counts", self.show_synonym_counts_toggle)
         return box
 
     def _build_index_group(self) -> QGroupBox:
@@ -977,6 +985,9 @@ class ConfigDialog(QDialog):
         if back_only is None:
             back_only = conf.get("show_on_answer_only", True)
         self.back_only_toggle.setChecked(bool(back_only))
+        self.show_synonym_counts_toggle.setChecked(
+            bool(conf.get("show_synonym_counts", True))
+        )
 
         ui = conf.get("ui") or deepcopy(DEFAULT_UI)
         self.max_width_edit.setText(str(ui.get("max_width", "100%")))
@@ -1063,6 +1074,7 @@ class ConfigDialog(QDialog):
             "include_suspended": self.include_suspended_toggle.isChecked(),
             "candidate_min_length": self.min_len_spin.value(),
             "show_only_on_back": self.back_only_toggle.isChecked(),
+            "show_synonym_counts": self.show_synonym_counts_toggle.isChecked(),
             "meaning_split_delimiters": prev.get(
                 "meaning_split_delimiters", ";|/|；|、"
             ),

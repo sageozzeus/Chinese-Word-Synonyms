@@ -4,14 +4,15 @@ This document is the source of truth for maintaining and extending the add-on. R
 
 ## What the add-on does
 
-During review, when the **answer** is shown, the add-on:
+During review:
 
 1. Reads the current note’s configured **word** and **meaning** fields
 2. Normalizes the meaning into one or more synonym keys
 3. Looks up other notes in an in-memory inverted index that share those keys
-4. Injects a **Synonyms** HTML panel under the card (does not edit notes or templates)
+4. On the **answer** (default): injects a **Synonyms** HTML panel under the card
+5. On the **question** (when **Show only on back** and **Show synonym counts** are on): injects a small pill with the synonym count (e.g. `4 Synonyms`)
 
-If there are no synonyms, nothing is injected (no empty box).
+Does not edit notes or templates. If there are no synonyms, nothing is injected (no empty box, no “0 synonyms”).
 
 ```
 profile open / sync / Tools→Rebuild
@@ -23,6 +24,11 @@ card_will_show (reviewAnswer)  + reviewer_did_show_answer fallback
         │
         ▼
   synonyms_for(meaning) → render_panel() → append / eval
+        │
+card_will_show (reviewQuestion, back-only + show counts)
+        │
+        ▼
+  synonyms_for(meaning) → render_front_badge(count) → append
         │
 reviewer_did_show_question
         │
@@ -99,7 +105,8 @@ Anki loads Python at startup. There is **no hot reload**.
 | `max_synonyms` | int | Cap after filters. |
 | `include_suspended` | bool | Applied at **lookup** (no rebuild). |
 | `candidate_min_length` | int | Min CJK length on candidates. |
-| `show_only_on_back` | bool | On = answer only. |
+| `show_only_on_back` | bool | On = full panel on answer only (default). |
+| `show_synonym_counts` | bool | On = count pill on question when `show_only_on_back` is on. |
 | `meaning_split_delimiters` | string | Pipe-separated delimiters; `\|` itself via `\|\|`. |
 | `min_key_length` | int | Drop short keys. |
 | `ignore_keys` | `string[]` | Drop useless keys like `something`. |
@@ -148,6 +155,38 @@ chmod +x scripts/package-ankiaddon.sh
 ```
 
 Archive root must contain `__init__.py` (no wrapping folder). Exclude `__pycache__`, `meta.json`, `.DS_Store`.
+
+`preview/`, `docs/`, and tests stay outside `chinese_word_synonyms/` so they are never included.
+
+### GitHub Release
+
+**Required after every version push to `main`.** Users install from the Release asset, not from source.
+
+1. Bump `ADDON_VERSION` + changelog in `about_meta.py` when shipping a new version.
+2. Commit, push to `main`.
+3. From repo root (after `gh auth login` once):
+
+   ```bash
+   chmod +x scripts/release-github.sh
+   ./scripts/release-github.sh
+   ```
+
+   This builds `chinese_word_synonyms-${VERSION}.ankiaddon`, creates tag `v${VERSION}` if missing, uploads the asset, and sets release notes from the changelog.
+
+4. Reddit / community post copy: [`REDDIT_RELEASE.md`](REDDIT_RELEASE.md).
+
+Manual equivalent:
+
+```bash
+./scripts/package-ankiaddon.sh
+VERSION=$(python3 -c "from chinese_word_synonyms.about_meta import ADDON_VERSION; print(ADDON_VERSION)")
+OUT="chinese_word_synonyms-${VERSION}.ankiaddon"
+gh release create "v${VERSION}" "$OUT" --title "v${VERSION}" --notes-file -
+```
+
+If the release already exists: `gh release upload "v${VERSION}" "$OUT" --clobber`
+
+README install link uses `/releases/latest` (no edit needed per version).
 
 ## Automated tests (no Anki)
 

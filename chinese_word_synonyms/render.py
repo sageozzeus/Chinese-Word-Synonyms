@@ -202,6 +202,33 @@ PANEL_CSS = """
 }
 """
 
+FRONT_BADGE_CSS = """
+.word-synonyms-front-pill {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0.85em auto 0;
+  padding: 0.32em 0.9em;
+  border-radius: 999px;
+  font-size: 0.78em;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  border: 1px solid var(--ws-border, #b0b0b0);
+  background: var(--ws-bg, #e4ecf6);
+  color: var(--ws-title, #1a3a6b);
+  box-shadow: var(--ws-shadow, 0 2px 6px rgba(40, 35, 30, 0.06));
+  box-sizing: border-box;
+}
+.nightMode .word-synonyms-front-pill,
+.night-mode .word-synonyms-front-pill {
+  border-color: var(--ws-border-dark, #5a5a5a);
+  background: var(--ws-bg-dark, #2a303a);
+  color: var(--ws-title-dark, #b8dcff);
+  box-shadow: var(--ws-shadow-dark, 0 2px 8px rgba(0, 0, 0, 0.28));
+}
+"""
+
 PANEL_JS = """
 (function () {
   function refresh(wrap) {
@@ -294,6 +321,31 @@ def _css_var_block(ui: dict[str, Any]) -> str:
 def _safe_custom_css(css: str) -> str:
     """Prevent breaking out of the style tag."""
     return (css or "").replace("</", "<\\/")
+
+
+def _synonym_count_label(count: int) -> str:
+    n = int(count)
+    if n == 1:
+        return "1 Synonym"
+    return f"{n} Synonyms"
+
+
+def render_front_badge(
+    count: int,
+    ui: Optional[dict[str, Any]] = None,
+) -> str:
+    """Small pill on the card front showing how many synonyms exist on the back."""
+    n = int(count)
+    if n <= 0:
+        return ""
+
+    ui = merge_ui(ui)
+    label = escape(_synonym_count_label(n))
+    return (
+        f"<style id=\"word-synonyms-front-style\">{FRONT_BADGE_CSS}</style>"
+        f'<div class="word-synonyms-front-pill" id="word-synonyms-front-pill" '
+        f'style="{_css_var_block(ui)}">{label}</div>'
+    )
 
 
 def render_panel(

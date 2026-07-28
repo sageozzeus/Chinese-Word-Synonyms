@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import List, Tuple
 
 ADDON_NAME = "Chinese Word Synonyms"
-ADDON_VERSION = "0.1.0"
+ADDON_VERSION = "0.1.1"
 MIN_ANKI = "23.10+"
 AUTHOR = "Ozzeus"
 LICENSE = "MIT"
@@ -24,6 +24,14 @@ URL_ANKIWEB = ""
 
 # Newest first. Keep the latest entry to ~5 bullets for the About dialog.
 CHANGELOG: List[Tuple[str, List[str]]] = [
+    (
+        "0.1.1",
+        [
+            "Front card pill shows how many synonyms match (e.g. 4 Synonyms)",
+            "Toggle Show synonym counts in General → Display options",
+            "Full Synonyms panel still on the card back when Show only on back is on",
+        ],
+    ),
     (
         "0.1.0",
         [

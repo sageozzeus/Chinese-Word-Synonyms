@@ -13,10 +13,11 @@ from .defaults import merge_config
 from .indexer import (
     FALLBACK_MEANING_FIELDS,
     FALLBACK_WORD_FIELDS,
+    SynonymEntry,
     get_index,
     resolve_field,
 )
-from .render import PANEL_JS, render_panel
+from .render import PANEL_JS, render_front_badge, render_panel
 
 
 def _package_name() -> str:
@@ -31,6 +32,10 @@ def _show_only_on_back(config: dict[str, Any]) -> bool:
     if "show_only_on_back" in config:
         return bool(config["show_only_on_back"])
     return bool(config.get("show_on_answer_only", True))
+
+
+def _show_synonym_counts(config: dict[str, Any]) -> bool:
+    return bool(config.get("show_synonym_counts", True))
 
 
 def _field(config: dict[str, Any], key: str, default: str) -> str:
@@ -59,24 +64,40 @@ def _fields_from_note(
     return word, meaning, nid
 
 
-def panel_html_for_card(card: Card) -> str:
-    """Build Synonyms panel HTML for *card*, or "" if nothing to show."""
+def _synonym_entries_for_card(card: Card) -> list[SynonymEntry]:
     idx = get_index()
     if not idx.note_count and not idx._index:
-        return ""
+        return []
 
     config = _config()
     try:
         note = card.note()
     except Exception:
-        return ""
+        return []
 
     word, meaning, note_id = _fields_from_note(note, config)
     if not meaning:
-        return ""
+        return []
 
-    entries = idx.synonyms_for(meaning, config, note_id=note_id, word=word or "")
+    return idx.synonyms_for(meaning, config, note_id=note_id, word=word or "")
+
+
+def panel_html_for_card(card: Card) -> str:
+    """Build Synonyms panel HTML for *card*, or "" if nothing to show."""
+    entries = _synonym_entries_for_card(card)
+    if not entries:
+        return ""
+    config = _config()
     return render_panel(entries, ui=config.get("ui"))
+
+
+def front_badge_html_for_card(card: Card) -> str:
+    """Pill on the question side when the full panel is back-only."""
+    entries = _synonym_entries_for_card(card)
+    if not entries:
+        return ""
+    config = _config()
+    return render_front_badge(len(entries), ui=config.get("ui"))
 
 
 def on_card_will_show(html: str, card: Card, context: str) -> str:
@@ -88,6 +109,9 @@ def on_card_will_show(html: str, card: Card, context: str) -> str:
     if context not in ("reviewAnswer", "reviewQuestion"):
         return html
     config = _config()
+    if context == "reviewQuestion" and _show_only_on_back(config) and _show_synonym_counts(config):
+        badge = front_badge_html_for_card(card)
+        return html + badge if badge else html
     if _show_only_on_back(config) and context != "reviewAnswer":
         return html
     panel = panel_html_for_card(card)

@@ -568,6 +568,10 @@
           <span>Show only on back</span>
           <label class="toggle"><input type="checkbox" checked /><span class="slider"></span></label>
         </div>
+        <div class="toggle-row">
+          <span>Show synonym counts</span>
+          <label class="toggle"><input type="checkbox" checked /><span class="slider"></span></label>
+        </div>
       </section>
 
       <section class="group">
@@ -658,7 +662,7 @@
           <dt>Name</dt>
           <dd>Chinese Word Synonyms</dd>
           <dt>Version</dt>
-          <dd>0.1.0</dd>
+          <dd>0.1.1</dd>
           <dt>Requires Anki</dt>
           <dd>23.10+</dd>
           <dt>License</dt>
@@ -686,11 +690,17 @@
 
       <section class="group">
         <h2 class="group-title">Changelog</h2>
-        <p class="changelog-version">v0.1.0</p>
+        <p class="changelog-version">v0.1.1</p>
         <ul class="changelog-list">
-          <li>Related words from your own deck by shared Chinese characters</li>
+          <li>Front card pill shows how many synonyms match (e.g. 4 Synonyms)</li>
+          <li>Toggle Show synonym counts in General → Display options</li>
+          <li>Full Synonyms panel still on the card back when Show only on back is on</li>
+        </ul>
+        <p class="changelog-older">v0.1.0</p>
+        <ul class="changelog-list">
+          <li>Synonyms from your own deck by shared normalized meanings</li>
           <li>General and Appearance settings GUI (no JSON editing)</li>
-          <li>Click a related word to open it in the Browser</li>
+          <li>Click a synonym to open it in the Browser</li>
           <li>Light/dark panel colors and optional custom CSS</li>
           <li>Rebuild Index from Tools → Chinese Word Synonyms…</li>
         </ul>

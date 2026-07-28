@@ -3,7 +3,8 @@
 Chinese Word Synonyms
 
 Shows deck words that share the same normalized meaning with the
-current card on the answer (back) side during review.
+current card during review (Synonyms panel on the back by default;
+optional count pill on the front).
 """
 
 from __future__ import annotations

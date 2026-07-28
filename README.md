@@ -2,7 +2,7 @@
 
 Anki desktop add-on that shows **synonyms from your own deck** that share the same normalized meaning with the card you’re reviewing.
 
-Example: reviewing **快乐** (happy) → under the answer you see 高兴, 开心, 愉快… if those notes exist and their Meaning fields normalize to the same sense.
+Example: reviewing **快乐** (happy) → on the question you may see a small pill (e.g. **6 Synonyms**); on the answer, 高兴, 开心, 愉快… if those notes exist and their Meaning fields normalize to the same sense.
 
 Works offline. Uses only your collection — no external dictionary, no AnkiConnect, no CEDICT download.
 
@@ -19,7 +19,7 @@ Pairs well with **[Chinese Character Relations](https://github.com/sageozzeus/Ch
 ### From GitHub (recommended until AnkiWeb is live)
 
 1. Open the latest [Release](https://github.com/sageozzeus/Chinese-Word-Synonyms/releases/latest).
-2. Download the **`.ankiaddon`** asset (e.g. `chinese_word_synonyms-0.1.0.ankiaddon`), not Source code.
+2. Download the **`.ankiaddon`** asset (e.g. `chinese_word_synonyms-0.1.1.ankiaddon`), not Source code.
 3. Double-click the file, or open it with Anki / drag it onto the Anki window.
 4. Restart Anki when prompted.
 5. Open **Tools → Chinese Word Synonyms…**
@@ -47,9 +47,11 @@ Or copy the `chinese_word_synonyms` folder into your Anki add-ons folder, then r
 
 | Tab | What it’s for |
 | --- | --- |
-| **General** | Decks, Word / Meaning fields, display limits, **Rebuild Index** |
+| **General** | Decks, Word / Meaning fields, display limits (max synonyms, **Show only on back**, **Show synonym counts**), **Rebuild Index** |
 | **Appearance** | Panel width, type sizes, colors, optional custom CSS |
 | **About** | Version, changelog, bug reports, links |
+
+**Display options (General):** With default **Show only on back**, the question side shows a small count pill (e.g. `4 Synonyms`) when **Show synonym counts** is on; the full Synonyms panel appears on the answer. Turn off **Show synonym counts** to hide the front pill. Turn off **Show only on back** to show the full panel on both sides (no pill).
 
 After changing decks or fields, rebuild when prompted (or use **Rebuild Index**). Appearance changes apply on the next answer flip — no rebuild needed.
 
@@ -63,6 +65,7 @@ Meaning text is normalized into keys: strip HTML, lowercase, drop POS prefixes (
 
 - Click a synonym to open that note in the Browser.
 - If nothing appears, check Word + Meaning field names and rebuild; words with unique meanings simply show no panel.
+- Use **Show synonym counts** to hide the front pill while keeping synonyms on the back.
 - Suspended notes can be included or hidden on the General tab.
 - Safe alongside Character Relations — panels may both appear under the answer.
 
@@ -72,7 +75,7 @@ Meaning text is normalized into keys: strip HTML, lowercase, drop POS prefixes (
 - **Updates / short questions:** [X @sageozzeus](https://x.com/sageozzeus)
 - **Source:** [github.com/sageozzeus/Chinese-Word-Synonyms](https://github.com/sageozzeus/Chinese-Word-Synonyms)
 
-Maintainer docs: [`docs/MAINTENANCE.md`](docs/MAINTENANCE.md) · QA checklist: [`docs/TESTING.md`](docs/TESTING.md)
+Maintainer docs: [`docs/MAINTENANCE.md`](docs/MAINTENANCE.md) · QA checklist: [`docs/TESTING.md`](docs/TESTING.md) · Reddit post copy: [`docs/REDDIT_RELEASE.md`](docs/REDDIT_RELEASE.md)
 
 ## License
 

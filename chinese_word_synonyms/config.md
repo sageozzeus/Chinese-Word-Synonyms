@@ -16,7 +16,8 @@ Settings are edited in a **GUI dialog** (no JSON editing required):
 | Max synonyms | `12` | Cap on synonyms shown in the panel |
 | Include suspended | yes | Show notes whose cards are all suspended |
 | Min word length | `1` | Minimum CJK length for synonym candidates |
-| Show only on back | yes | Off = show synonyms on front and back during review |
+| Show only on back | yes | Off = show full Synonyms panel on front and back during review |
+| Show synonym counts | yes | Front pill with synonym count when Show only on back is on |
 | Rebuild Index | button | Scans decks and refreshes the meaning → notes index |
 
 After changing decks or fields, rebuild when prompted (or use **Rebuild Index** on this tab).

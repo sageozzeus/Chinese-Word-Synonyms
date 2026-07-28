@@ -36,6 +36,7 @@ DEFAULT_CONFIG: dict[str, Any] = {
     "include_suspended": True,
     "candidate_min_length": 1,
     "show_only_on_back": True,
+    "show_synonym_counts": True,
     "meaning_split_delimiters": ";|/|；|、",
     "min_key_length": 2,
     "strip_leading_to": True,
