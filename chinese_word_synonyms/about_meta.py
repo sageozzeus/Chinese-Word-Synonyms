@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import List, Tuple
 
 ADDON_NAME = "Chinese Word Synonyms"
-ADDON_VERSION = "0.1.1"
+ADDON_VERSION = "0.1.3"
 MIN_ANKI = "23.10+"
 AUTHOR = "Ozzeus"
 LICENSE = "MIT"
@@ -25,6 +25,22 @@ ANKIWEB_CODE = "1733540881"
 
 # Newest first. Keep the latest entry to ~5 bullets for the About dialog.
 CHANGELOG: List[Tuple[str, List[str]]] = [
+    (
+        "0.1.3",
+        [
+            "Front card: N Known Synonyms / N Total Synonyms (Known = unsuspended)",
+            "Meaning delimiters in Settings (defaults include comma)",
+            "Optional Extra delimiters; rebuild prompt when they change",
+        ],
+    ),
+    (
+        "0.1.2",
+        [
+            "Front card: N Known Synonyms / N Total Synonyms (compact)",
+            "Known = unsuspended synonyms; Total = all matches",
+            "Comma (,) is a default meaning delimiter (e.g. happy, glad)",
+        ],
+    ),
     (
         "0.1.1",
         [

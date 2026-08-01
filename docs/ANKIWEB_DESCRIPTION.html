@@ -1,20 +1,21 @@
 <!-- Paste into AnkiWeb → Share Add-on → Description.
      AnkiWeb strips tables and most CSS; use the single grid image below. -->
-<p>Shows <b>synonyms from your own collection</b> while you review Chinese cards: other notes whose Meaning / Definition / English field normalizes to the same sense as the card you are on.</p>
+<p>Shows <b>synonyms from your own collection</b> while you review Chinese cards: other notes that share a normalized Meaning / Definition / English sense.</p>
 
-<p><b>Example:</b> reviewing 快乐 (meaning <i>happy</i>) → on the answer you may see 高兴, 开心, 愉快 if those cards exist with the same normalized meaning.</p>
+<p><b>Example:</b> reviewing 快乐 (happy) → front shows <b>2 Known Synonyms</b> / <b>6 Total Synonyms</b>; back lists 高兴, 开心, 愉快 when those notes share a sense.</p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/sageozzeus/Chinese-Word-Synonyms/main/docs/media/review-screenshots-grid.png" width="552" alt="Question: synonym count pill; Answer: Synonyms panel" />
+<img src="https://raw.githubusercontent.com/sageozzeus/Chinese-Word-Synonyms/main/docs/media/review-screenshots-grid.png" width="552" alt="Question: Known/Total Synonyms card; Answer: Synonyms panel" />
 </p>
 
 <p><b>Features</b></p>
 <ul>
 <li>Offline — indexes your collection after <b>Rebuild Index</b>; no dictionary, CEDICT, or AnkiConnect</li>
-<li>Synonyms panel on the card back (default); optional count on the question (e.g. <code>1 Synonym</code>)</li>
-<li>Click a synonym to open that note in the Browser</li>
-<li><b>Tools → Chinese Word Synonyms…</b> — decks, fields, limits, colors, optional custom CSS</li>
-<li>Works alongside <a href="https://ankiweb.net/shared/info/1076075855">Chinese Character Relations</a> (shared characters vs shared meanings)</li>
+<li>Back: Synonyms panel. Front (optional): <b>Known</b> (unsuspended) + <b>Total</b> counts</li>
+<li>Configurable <b>meaning delimiters</b> (<code>;</code> <code>,</code> <code>|</code> <code>/</code> <code>；</code> <code>、</code> + Extra) so <code>happy, glad</code> splits into separate senses</li>
+<li>Click a synonym → open that note in the Browser</li>
+<li><b>Tools → Chinese Word Synonyms…</b> — decks, fields, delimiters, limits, colors, custom CSS</li>
+<li>Works alongside <a href="https://ankiweb.net/shared/info/1076075855">Chinese Character Relations</a></li>
 </ul>
 
 <p><b>Requirements</b></p>
@@ -27,7 +28,7 @@
 <ol>
 <li>Install and restart Anki</li>
 <li><b>Tools → Chinese Word Synonyms…</b></li>
-<li><b>General</b>: set Word and Meaning fields → <b>Rebuild Index</b></li>
+<li><b>General</b>: set Word + Meaning fields, check Meaning delimiters → <b>Rebuild Index</b></li>
 <li>Review a card whose meaning matches another note</li>
 </ol>
 

@@ -44,6 +44,13 @@ from aqt.utils import askUser, openLink, showInfo, tooltip
 
 from . import about_meta, indexer
 from .defaults import DEFAULT_CONFIG, DEFAULT_UI, merge_config
+from .meaning import (
+    DEFAULT_SPLIT_DELIMITERS,
+    KNOWN_SPLIT_DELIMITERS,
+    KNOWN_SPLIT_TOOLTIPS,
+    delimiters_to_spec,
+    spec_to_ui,
+)
 
 ADDON_PACKAGE = __name__.split(".")[0]
 
@@ -542,6 +549,7 @@ class ConfigDialog(QDialog):
         layout.addWidget(intro)
         layout.addWidget(self._build_decks_group())
         layout.addWidget(self._build_fields_group())
+        layout.addWidget(self._build_delimiters_group())
         layout.addWidget(self._build_display_group())
         layout.addWidget(self._build_index_group())
         layout.addStretch(1)
@@ -747,6 +755,52 @@ class ConfigDialog(QDialog):
         layout.addWidget(tip)
         return box
 
+    def _build_delimiters_group(self) -> QGroupBox:
+        box = _style_group(QGroupBox("Meaning delimiters"))
+        layout = QVBoxLayout(box)
+        layout.setSpacing(6)
+
+        tip = QLabel(
+            "Characters that separate senses in your Meaning field "
+            "(e.g. happy, glad or happy; glad)."
+        )
+        tip.setWordWrap(True)
+        tip.setStyleSheet("opacity: 0.7; font-size: 11px;")
+        layout.addWidget(tip)
+
+        grid = QGridLayout()
+        grid.setHorizontalSpacing(8)
+        grid.setVerticalSpacing(4)
+        self.delim_checks: dict[str, QCheckBox] = {}
+        for i, delim in enumerate(KNOWN_SPLIT_DELIMITERS):
+            cb = QCheckBox(delim)
+            cb.setToolTip(KNOWN_SPLIT_TOOLTIPS.get(delim, delim))
+            self.delim_checks[delim] = cb
+            grid.addWidget(cb, i // 3, i % 3)
+        for col in range(3):
+            grid.setColumnStretch(col, 1)
+        layout.addLayout(grid)
+
+        extra_row = QHBoxLayout()
+        extra_row.setSpacing(8)
+        extra_lbl = QLabel("Extra")
+        extra_lbl.setStyleSheet(_CONTROL_LABEL_STYLE)
+        self.delim_extra_edit = QLineEdit()
+        self.delim_extra_edit.setPlaceholderText("optional · : …")
+        self.delim_extra_edit.setToolTip(
+            "Any extra single-character delimiters not listed above."
+        )
+        _normalize_control_field(self.delim_extra_edit)
+        extra_row.addWidget(extra_lbl, 0)
+        extra_row.addWidget(self.delim_extra_edit, 1)
+        layout.addLayout(extra_row)
+
+        rebuild_tip = QLabel("Rebuild the index after changing delimiters.")
+        rebuild_tip.setWordWrap(True)
+        rebuild_tip.setStyleSheet("opacity: 0.7; font-size: 11px;")
+        layout.addWidget(rebuild_tip)
+        return box
+
     def _build_display_group(self) -> QGroupBox:
         box = _style_group(QGroupBox("Display options"))
         layout = QVBoxLayout(box)
@@ -780,8 +834,8 @@ class ConfigDialog(QDialog):
 
         self.show_synonym_counts_toggle = ToggleSwitch()
         self.show_synonym_counts_toggle.setToolTip(
-            "On: show a small pill on the card front with how many synonyms exist "
-            "(when Show only on back is on). Off: no count on the front."
+            "On: show a small front card with Known (unsuspended) and Total synonym "
+            "counts (when Show only on back is on). Off: no front summary."
         )
         _add_toggle_row(layout, "Show synonym counts", self.show_synonym_counts_toggle)
         return box
@@ -790,8 +844,9 @@ class ConfigDialog(QDialog):
         box = _style_group(QGroupBox("Index"))
         layout = QVBoxLayout(box)
         tip = QLabel(
-            "Rebuild after changing decks or fields, or when new notes should appear "
-            "in Synonyms. Appearance changes do not need a rebuild."
+            "Rebuild after changing decks, fields, or meaning delimiters, "
+            "or when new notes should appear in Synonyms. "
+            "Appearance changes do not need a rebuild."
         )
         tip.setWordWrap(True)
         tip.setStyleSheet("opacity: 0.7; font-size: 11px;")
@@ -989,6 +1044,14 @@ class ConfigDialog(QDialog):
             bool(conf.get("show_synonym_counts", True))
         )
 
+        known, extra = spec_to_ui(
+            str(conf.get("meaning_split_delimiters") or DEFAULT_SPLIT_DELIMITERS)
+        )
+        known_set = set(known)
+        for delim, cb in self.delim_checks.items():
+            cb.setChecked(delim in known_set)
+        self.delim_extra_edit.setText(extra)
+
         ui = conf.get("ui") or deepcopy(DEFAULT_UI)
         self.max_width_edit.setText(str(ui.get("max_width", "100%")))
         self.radius_spin.setValue(int(ui.get("border_radius_px", 12)))
@@ -1063,6 +1126,12 @@ class ConfigDialog(QDialog):
             return None
 
         prev = self._conf
+        selected = [d for d, cb in self.delim_checks.items() if cb.isChecked()]
+        delim_spec = delimiters_to_spec(selected, self.delim_extra_edit.text())
+        if not selected and not (self.delim_extra_edit.text() or "").strip():
+            showInfo("Select at least one meaning delimiter.")
+            return None
+
         return {
             "decks": decks,
             "fields": {
@@ -1075,9 +1144,7 @@ class ConfigDialog(QDialog):
             "candidate_min_length": self.min_len_spin.value(),
             "show_only_on_back": self.back_only_toggle.isChecked(),
             "show_synonym_counts": self.show_synonym_counts_toggle.isChecked(),
-            "meaning_split_delimiters": prev.get(
-                "meaning_split_delimiters", ";|/|；|、"
-            ),
+            "meaning_split_delimiters": delim_spec,
             "min_key_length": int(prev.get("min_key_length", 2) or 2),
             "strip_leading_to": bool(prev.get("strip_leading_to", True)),
             "ignore_keys": list(prev.get("ignore_keys") or []),
@@ -1095,12 +1162,14 @@ class ConfigDialog(QDialog):
         needs_rebuild = (
             conf.get("decks") != prev.get("decks")
             or conf.get("fields") != prev.get("fields")
+            or conf.get("meaning_split_delimiters")
+            != prev.get("meaning_split_delimiters")
         )
 
         if needs_rebuild:
             rebuild = askUser(
                 "Settings saved.\n\nRebuild the synonym index now?\n"
-                "(Recommended after changing decks or fields.)"
+                "(Recommended after changing decks, fields, or meaning delimiters.)"
             )
             if rebuild:
                 if mw.col is None:

@@ -14,21 +14,53 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from chinese_word_synonyms.meaning import (  # noqa: E402
+    DEFAULT_SPLIT_DELIMITERS,
+    delimiters_to_spec,
     normalize_from_config,
     normalize_meaning,
     parse_delimiters,
+    spec_to_ui,
 )
 
 
 class TestParseDelimiters(unittest.TestCase):
     def test_pipe_separated(self) -> None:
         self.assertEqual(
-            parse_delimiters(";|/|；|、"),
-            [";", "|", "/", "；", "、"],
+            parse_delimiters(";|/|；|、|,"),
+            [";", "|", "/", "；", "、", ","],
         )
 
     def test_empty_falls_back(self) -> None:
         self.assertIn(";", parse_delimiters(""))
+        self.assertIn(",", parse_delimiters(""))
+
+
+class TestDelimiterSpecRoundTrip(unittest.TestCase):
+    def test_default_round_trip(self) -> None:
+        known, extra = spec_to_ui(DEFAULT_SPLIT_DELIMITERS)
+        self.assertEqual(set(known), {";", ",", "|", "/", "；", "、"})
+        self.assertEqual(extra, "")
+        spec = delimiters_to_spec(known, extra)
+        self.assertEqual(set(parse_delimiters(spec)), set(parse_delimiters(DEFAULT_SPLIT_DELIMITERS)))
+
+    def test_without_pipe(self) -> None:
+        spec = delimiters_to_spec([";", ","], "")
+        self.assertNotIn("|", parse_delimiters(spec))
+        self.assertEqual(set(parse_delimiters(spec)), {";", ","})
+
+    def test_extra_chars(self) -> None:
+        spec = delimiters_to_spec([";"], "·:")
+        keys = parse_delimiters(spec)
+        self.assertIn(";", keys)
+        self.assertIn("·", keys)
+        self.assertIn(":", keys)
+        known, extra = spec_to_ui(spec)
+        self.assertEqual(known, [";"])
+        self.assertIn("·", extra)
+        self.assertIn(":", extra)
+
+    def test_empty_falls_back_to_default(self) -> None:
+        self.assertEqual(delimiters_to_spec([], ""), DEFAULT_SPLIT_DELIMITERS)
 
 
 class TestNormalizeMeaning(unittest.TestCase):
@@ -53,6 +85,10 @@ class TestNormalizeMeaning(unittest.TestCase):
         self.assertEqual(
             normalize_meaning("快乐；happy"),
             ["快乐", "happy"],
+        )
+        self.assertEqual(
+            normalize_meaning("happy, glad, joyful"),
+            ["happy", "glad", "joyful"],
         )
 
     def test_pos_prefix(self) -> None:

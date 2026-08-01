@@ -2,19 +2,19 @@
 
 Anki desktop add-on that shows **synonyms from your own deck** that share the same normalized meaning with the card you’re reviewing.
 
-Example: reviewing **快乐** (happy) → on the question you may see a small pill (e.g. **6 Synonyms**); on the answer, 高兴, 开心, 愉快… if those notes exist and their Meaning fields normalize to the same sense.
+Example: reviewing **快乐** (happy) → front shows **2 Known Synonyms** / **6 Total Synonyms**; back lists 高兴, 开心, 愉快… when those notes share a meaning sense.
 
-Works offline. Uses only your collection — no external dictionary, no AnkiConnect, no CEDICT download.
+Works offline — your collection only. No external dictionary, AnkiConnect, or CEDICT.
 
-Pairs well with **[Chinese Character Relations](https://github.com/sageozzeus/Chinese-Character-Relations)** (shared characters). Both can be installed together; they use separate menus, indexes, panel IDs, and `pycmd` prefixes.
+Pairs well with **[Chinese Character Relations](https://github.com/sageozzeus/Chinese-Character-Relations)** (shared characters). Separate menus, indexes, and panels.
 
 ## Screenshots
 
 <table>
   <tr>
     <td width="50%" align="center">
-      <img src="docs/media/review-front-count.png" alt="Question side: synonym count pill (e.g. 1 Synonym)" />
-      <br /><sub>Question — synonym count</sub>
+      <img src="docs/media/review-front-count.png" alt="Question side: Synonyms card with Known and Total counts" />
+      <br /><sub>Question — Known / Total</sub>
     </td>
     <td width="50%" align="center">
       <img src="docs/media/review-back-synonyms.png" alt="Answer side: Synonyms panel with related words from your deck" />
@@ -42,14 +42,14 @@ Or open the [AnkiWeb listing](https://ankiweb.net/shared/info/1733540881) and cl
 ### From GitHub Release
 
 1. Open the latest [Release](https://github.com/sageozzeus/Chinese-Word-Synonyms/releases/latest).
-2. Download the **`.ankiaddon`** asset (e.g. `chinese_word_synonyms-0.1.1.ankiaddon`), not Source code.
+2. Download the **`.ankiaddon`** asset (e.g. `chinese_word_synonyms-0.1.3.ankiaddon`), not Source code.
 3. Double-click the file, or open it with Anki / drag it onto the Anki window.
 4. Restart Anki when prompted.
 
 ### After install
 
 1. Open **Tools → Chinese Word Synonyms…**
-2. On the **General** tab, set Word / Hanzi, Meaning (and optional Pinyin) fields, then click **Rebuild Index**.
+2. **General**: set Word / Hanzi + Meaning fields, check **Meaning delimiters**, then **Rebuild Index**.
 
 ### Manual (developers)
 
@@ -69,36 +69,40 @@ Or copy the `chinese_word_synonyms` folder into your Anki add-ons folder, then r
 
 | Tab | What it’s for |
 | --- | --- |
-| **General** | Decks, Word / Meaning fields, display limits (max synonyms, **Show only on back**, **Show synonym counts**), **Rebuild Index** |
-| **Appearance** | Panel width, type sizes, colors, optional custom CSS |
-| **About** | Version, changelog, [AnkiWeb](https://ankiweb.net/shared/info/1733540881) / Rate links, bug reports |
+| **General** | Decks, fields, **meaning delimiters**, display limits, **Rebuild Index** |
+| **Appearance** | Panel width, type sizes, colors, custom CSS |
+| **About** | Version, changelog, [AnkiWeb](https://ankiweb.net/shared/info/1733540881) / Rate links |
 
-**Display options (General):** With default **Show only on back**, the question side shows a small count pill (e.g. `4 Synonyms`) when **Show synonym counts** is on; the full Synonyms panel appears on the answer. Turn off **Show synonym counts** to hide the front pill. Turn off **Show only on back** to show the full panel on both sides (no pill).
+**Front card (default):** With **Show only on back** + **Show synonym counts**, the question shows `N Known Synonyms` / `N Total Synonyms` (Known = unsuspended). Full list on the answer.
 
-After changing decks or fields, rebuild when prompted (or use **Rebuild Index**). Appearance changes apply on the next answer flip — no rebuild needed.
-
-Defaults assume `Word`, `Pinyin`, and `Meaning`. Fallbacks include `Definition`, `English`, `Gloss`, `Translation`, `含义`, `释义`, `Back`, and common Word field names.
+Rebuild after changing decks, fields, or delimiters. Appearance updates on the next flip.
 
 ## How matching works
 
-Meaning text is normalized into keys: strip HTML, lowercase, drop POS prefixes (`adj.`, `v.`, …), split on `;` `|` `/` `；` `、`, then index the note under each key. At review time, other notes sharing a key are shown (current note and identical headword excluded). Empty meaning → no panel.
+1. Read the Meaning field; strip HTML; lowercase; drop POS prefixes (`adj.`, `v.`, …).
+2. **Split** into senses on your chosen delimiters (default: `;` `,` `|` `/` `；` `、`).
+3. Index each note under every sense key.
+4. At review, show other notes that share at least one key (same headword excluded).
+
+`happy, glad` → keys `happy` and `glad`. A note with only `happy` matches. Without comma as a delimiter, the whole string stays one key and rarely matches.
+
+Configure delimiters under **General → Meaning delimiters** (checkboxes + optional Extra). Empty meaning → no panel.
 
 ## Tips
 
-- Click a synonym to open that note in the Browser.
-- If nothing appears, check Word + Meaning field names and rebuild; words with unique meanings simply show no panel.
-- Use **Show synonym counts** to hide the front pill while keeping synonyms on the back.
-- Suspended notes can be included or hidden on the General tab.
-- Safe alongside Character Relations — panels may both appear under the answer.
+- Click a synonym → opens that note in the Browser.
+- Nothing showing? Check Word + Meaning fields, delimiters, then rebuild.
+- Unique meanings correctly show no panel.
+- Safe with Character Relations — both panels can appear under the answer.
 
 ## Support
 
-- **AnkiWeb:** [listing](https://ankiweb.net/shared/info/1733540881) · download code `1733540881`
+- **AnkiWeb:** [listing](https://ankiweb.net/shared/info/1733540881) · code `1733540881`
 - **Bugs:** [GitHub Issues](https://github.com/sageozzeus/Chinese-Word-Synonyms/issues)
 - **Updates / short questions:** [X @sageozzeus](https://x.com/sageozzeus)
 - **Source:** [github.com/sageozzeus/Chinese-Word-Synonyms](https://github.com/sageozzeus/Chinese-Word-Synonyms)
 
-Maintainer docs: [`docs/MAINTENANCE.md`](docs/MAINTENANCE.md) · QA checklist: [`docs/TESTING.md`](docs/TESTING.md) · Reddit post copy: [`docs/REDDIT_RELEASE.md`](docs/REDDIT_RELEASE.md)
+Maintainer docs: [`docs/MAINTENANCE.md`](docs/MAINTENANCE.md) · QA: [`docs/TESTING.md`](docs/TESTING.md) · Reddit: [`docs/REDDIT_RELEASE.md`](docs/REDDIT_RELEASE.md)
 
 ## License
 

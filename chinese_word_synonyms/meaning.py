@@ -25,24 +25,35 @@ _LEADING_TO_RE = re.compile(r"^to\s+", re.IGNORECASE)
 
 _CJK_ONLY_RE = re.compile(r"^[\u3400-\u4DBF\u4E00-\u9FFF]+$")
 
-DEFAULT_SPLIT_DELIMITERS = ";|/|；|、"
+DEFAULT_SPLIT_DELIMITERS = ";|/|；|、|,"
 DEFAULT_IGNORE_KEYS = ("something", "someone", "somebody")
+
+# Order shown in Settings → Meaning delimiters (labels are the characters).
+KNOWN_SPLIT_DELIMITERS: tuple[str, ...] = (";", ",", "|", "/", "；", "、")
+KNOWN_SPLIT_TOOLTIPS: dict[str, str] = {
+    ";": "Semicolon — happy; glad",
+    ",": "Comma — happy, glad",
+    "|": "Pipe — happy|glad",
+    "/": "Slash — happy/glad",
+    "；": "Fullwidth semicolon — 快乐；高兴",
+    "、": "Ideographic comma — 快乐、高兴",
+}
 
 
 def parse_delimiters(spec: str) -> list[str]:
     """
     Parse a delimiter config string into individual delimiter tokens.
 
-    Accepts pipe-separated form like ``;|/|；|、`` (preferred) or a raw
+    Accepts pipe-separated form like ``;|/|；|、|,`` (preferred) or a raw
     string of single-character delimiters.
     """
     raw = (spec or "").strip()
     if not raw:
-        return [";", "|", "/", "；", "、"]
+        return [";", "|", "/", "；", "、", ","]
     if "|" in raw and len(raw) > 1:
         # Pipe-separated tokens. "|" cannot appear as a non-empty token when it
         # is also the meta-separator, so always include it as a sense delimiter.
-        # e.g. ";|/|；|、" → [";", "|", "/", "；", "、"]
+        # e.g. ";|/|；|、|," → [";", "|", "/", "；", "、", ","]
         parts = [p for p in raw.split("|") if p]
         if "|" not in parts:
             # Insert after first token when present (keeps `;` first)
@@ -54,8 +65,57 @@ def parse_delimiters(spec: str) -> list[str]:
             if p not in seen:
                 seen.add(p)
                 ordered.append(p)
-        return ordered if ordered else [";", "|", "/", "；", "、"]
+        return ordered if ordered else [";", "|", "/", "；", "、", ","]
     return list(raw)
+
+
+def delimiters_to_spec(selected: Iterable[str], extra: str = "") -> str:
+    """
+    Build a ``meaning_split_delimiters`` config string from UI choices.
+
+    When ``|`` is among the selected delimiters, use pipe-separated form
+    (parser always treats ``|`` as a delimiter in that form). When it is not,
+    use a raw character string so ``|`` is not forced back in.
+    """
+    seen: set[str] = set()
+    ordered: list[str] = []
+
+    def _add(token: str) -> None:
+        if not token or token in seen:
+            return
+        seen.add(token)
+        ordered.append(token)
+
+    selected_set = {str(t) for t in selected if str(t)}
+    for d in KNOWN_SPLIT_DELIMITERS:
+        if d in selected_set:
+            _add(d)
+    for d in selected_set:
+        if d not in KNOWN_SPLIT_DELIMITERS:
+            _add(d)
+    for ch in extra or "":
+        if not ch.isspace():
+            _add(ch)
+
+    if not ordered:
+        return DEFAULT_SPLIT_DELIMITERS
+    if "|" in ordered:
+        # Meta-separator form; omit bare "|" from join — parse_delimiters reinserts it.
+        return "|".join(d for d in ordered if d != "|")
+    return "".join(ordered)
+
+
+def spec_to_ui(spec: str) -> tuple[list[str], str]:
+    """
+    Split a delimiter spec into (known checked chars, extra chars string).
+
+    *extra* is any delimiter not in ``KNOWN_SPLIT_DELIMITERS``, concatenated.
+    """
+    keys = parse_delimiters(spec)
+    known = [d for d in KNOWN_SPLIT_DELIMITERS if d in keys]
+    known_set = set(KNOWN_SPLIT_DELIMITERS)
+    extra = "".join(k for k in keys if k not in known_set)
+    return known, extra
 
 
 def _split_on_delimiters(text: str, delimiters: Iterable[str]) -> list[str]:

@@ -202,30 +202,37 @@ PANEL_CSS = """
 }
 """
 
+# Compact front summary — same card chrome as PANEL_CSS (.word-synonyms).
 FRONT_BADGE_CSS = """
-.word-synonyms-front-pill {
-  display: block;
+.word-synonyms.word-synonyms-front {
   width: fit-content;
-  max-width: 100%;
-  margin: 0.85em auto 0;
-  padding: 0.32em 0.9em;
-  border-radius: 999px;
-  font-size: 0.78em;
-  font-weight: 600;
-  line-height: 1.25;
+  max-width: min(14em, 100%);
+  margin: 1.15em auto 0;
+  gap: 0.08em;
+  padding: 0.4em 0.65em 0.45em;
   text-align: center;
-  border: 1px solid var(--ws-border, #b0b0b0);
-  background: var(--ws-bg, #e4ecf6);
-  color: var(--ws-title, #1a3a6b);
-  box-shadow: var(--ws-shadow, 0 2px 6px rgba(40, 35, 30, 0.06));
-  box-sizing: border-box;
 }
-.nightMode .word-synonyms-front-pill,
-.night-mode .word-synonyms-front-pill {
-  border-color: var(--ws-border-dark, #5a5a5a);
-  background: var(--ws-bg-dark, #2a303a);
-  color: var(--ws-title-dark, #b8dcff);
-  box-shadow: var(--ws-shadow-dark, 0 2px 8px rgba(0, 0, 0, 0.28));
+.word-synonyms-front-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.06em;
+  font-size: 0.72em;
+  line-height: 1.25;
+  font-weight: 500;
+  text-align: center;
+}
+.word-synonyms-front-known {
+  font-weight: 600;
+  color: var(--ws-mature, #2e7d32);
+}
+.word-synonyms-front-total {
+  font-size: calc(1em - 2pt);
+  opacity: 0.88;
+}
+.nightMode .word-synonyms-front-known,
+.night-mode .word-synonyms-front-known {
+  color: var(--ws-mature-dark, #81c784);
 }
 """
 
@@ -323,28 +330,46 @@ def _safe_custom_css(css: str) -> str:
     return (css or "").replace("</", "<\\/")
 
 
-def _synonym_count_label(count: int) -> str:
+def _count_synonyms_label(count: int, kind: str) -> str:
+    """e.g. '2 Known Synonyms' / '1 Total Synonym'."""
     n = int(count)
-    if n == 1:
-        return "1 Synonym"
-    return f"{n} Synonyms"
+    word = "Synonym" if n == 1 else "Synonyms"
+    return f"{n} {kind} {word}"
 
 
 def render_front_badge(
-    count: int,
+    known: int,
+    total: int,
     ui: Optional[dict[str, Any]] = None,
 ) -> str:
-    """Small pill on the card front showing how many synonyms exist on the back."""
-    n = int(count)
-    if n <= 0:
+    """
+    Compact summary card on the question side (no title).
+
+    *known* = unsuspended synonyms; *total* = all matched synonyms.
+    Same shell styling as the back panel.
+    """
+    total_n = int(total)
+    if total_n <= 0:
         return ""
 
+    known_n = max(0, min(int(known), total_n))
     ui = merge_ui(ui)
-    label = escape(_synonym_count_label(n))
+    custom = _safe_custom_css(str(ui.get("custom_css") or "")).strip()
+    custom_block = (
+        f"<style id=\"word-synonyms-front-custom\">{custom}</style>" if custom else ""
+    )
+    known_label = escape(_count_synonyms_label(known_n, "Known"))
+    total_label = escape(_count_synonyms_label(total_n, "Total"))
     return (
-        f"<style id=\"word-synonyms-front-style\">{FRONT_BADGE_CSS}</style>"
-        f'<div class="word-synonyms-front-pill" id="word-synonyms-front-pill" '
-        f'style="{_css_var_block(ui)}">{label}</div>'
+        f"<style id=\"word-synonyms-front-style\">{PANEL_CSS}{FRONT_BADGE_CSS}</style>"
+        f"{custom_block}"
+        f'<div class="word-synonyms word-synonyms-front" id="word-synonyms-front-card" '
+        f'style="{_css_var_block(ui)}">'
+        '<div class="word-synonyms-front-stats">'
+        f'<div class="word-synonyms-front-known">{known_label}</div>'
+        f'<div class="word-synonyms-front-total">{total_label}</div>'
+        "</div>"
+        "</div>"
     )
 
 

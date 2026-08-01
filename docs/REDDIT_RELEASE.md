@@ -4,6 +4,30 @@ Copy-paste for [r/Anki](https://www.reddit.com/r/Anki/). Update this file when y
 
 ---
 
+## v0.1.3 — update post
+
+**Title:** Chinese Word Synonyms v0.1.3 — Known/Total front card + meaning delimiters
+
+**Body:**
+
+Update to **Chinese Word Synonyms** — offline synonyms from your own deck by shared Meaning field.
+
+**What’s new in v0.1.3**
+
+- Front card: `N Known Synonyms` / `N Total Synonyms` (Known = unsuspended)
+- Meaning delimiter checkboxes in settings (`;` `,` `|` `/` `；` `、` + Extra) — so `happy, glad` splits correctly
+- Full Synonyms panel still on the back
+
+**Install:** **Tools → Add-ons → Get Add-ons…** → code `1733540881`, or [AnkiWeb](https://ankiweb.net/shared/info/1733540881). Restart → **Tools → Chinese Word Synonyms…** → fields + delimiters → **Rebuild Index**.
+
+- AnkiWeb: https://ankiweb.net/shared/info/1733540881
+- Release: https://github.com/sageozzeus/Chinese-Word-Synonyms/releases/latest
+- Issues: https://github.com/sageozzeus/Chinese-Word-Synonyms/issues
+
+Anki 23.10+, macOS / Windows / Linux. MIT.
+
+---
+
 ## v0.1.1 — update post
 
 **Title:** Chinese Word Synonyms add-on v0.1.1 — synonym count on the card front

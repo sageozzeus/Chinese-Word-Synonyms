@@ -129,3 +129,13 @@ Imported and adapted from sibling **Chinese Character Relations**. Same Anki pit
 | pycmd | `char_relations_browse:` | `word_synonyms_browse:` |
 
 Do not reuse Relatives class names or command prefixes.
+
+---
+
+## Front Known/Total card missing on question
+
+**Symptom:** After switching from the old count pill to the Known/Total front card, the question side shows nothing even when synonyms exist on the back.
+
+**Cause:** `reviewer_did_show_question` → `on_show_question` cleaned up leftover answer-panel DOM and also removed `#word-synonyms-front-card` / its styles. That runs *after* `card_will_show` injects the front summary, so the card was deleted immediately.
+
+**Fix:** `on_show_question` only removes the answer panel (`#word-synonyms-panel` and related styles). Leave the front summary alone; Anki replaces `#qa` on the next flip.

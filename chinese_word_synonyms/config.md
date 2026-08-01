@@ -17,12 +17,13 @@ Settings are edited in a **GUI dialog** (no JSON editing required):
 | Include suspended | yes | Show notes whose cards are all suspended |
 | Min word length | `1` | Minimum CJK length for synonym candidates |
 | Show only on back | yes | Off = show full Synonyms panel on front and back during review |
-| Show synonym counts | yes | Front pill with synonym count when Show only on back is on |
+| Show synonym counts | yes | Front card: Known (unsuspended) + Total Synonyms when Show only on back is on |
+| Meaning delimiters | `; , \| / ； 、` | Checkboxes (+ optional Extra) for sense separators in the Meaning field |
 | Rebuild Index | button | Scans decks and refreshes the meaning → notes index |
 
-After changing decks or fields, rebuild when prompted (or use **Rebuild Index** on this tab).
+After changing decks, fields, or meaning delimiters, rebuild when prompted (or use **Rebuild Index** on this tab).
 
-Advanced meaning-normalization knobs (`meaning_split_delimiters`, `min_key_length`, `ignore_keys`, `strip_leading_to`) live in config defaults and are preserved on Save; edit via Add-ons config storage if you need to tweak them.
+Advanced meaning-normalization knobs (`min_key_length`, `ignore_keys`, `strip_leading_to`) live in config defaults and are preserved on Save; edit via Add-ons config storage if you need to tweak them.
 
 ## Appearance tab
 

@@ -92,12 +92,13 @@ def panel_html_for_card(card: Card) -> str:
 
 
 def front_badge_html_for_card(card: Card) -> str:
-    """Pill on the question side when the full panel is back-only."""
+    """Known/Total summary card on the question side when the full panel is back-only."""
     entries = _synonym_entries_for_card(card)
     if not entries:
         return ""
     config = _config()
-    return render_front_badge(len(entries), ui=config.get("ui"))
+    known = sum(1 for e in entries if not e.suspended)
+    return render_front_badge(known, len(entries), ui=config.get("ui"))
 
 
 def on_card_will_show(html: str, card: Card, context: str) -> str:
@@ -154,8 +155,9 @@ def on_show_answer(card: Card) -> None:
 def on_show_question(card: Card) -> None:
     if not _show_only_on_back(_config()):
         return
-    # card_will_show replaces #qa content; nothing required.
-    # Clear any leftover fallback injection just in case.
+    # card_will_show already appended the front Known/Total card into question HTML.
+    # Only strip leftover *answer* panel injection from a prior fallback eval —
+    # do not remove #word-synonyms-front-card (that would erase the front summary).
     if mw.reviewer is None or mw.reviewer.web is None:
         return
     mw.reviewer.web.eval(

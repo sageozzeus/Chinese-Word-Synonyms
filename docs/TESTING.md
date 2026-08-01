@@ -15,6 +15,7 @@ Run these after any change to indexing, rendering, or hooks. Use a Chinese vocab
 - Open **Tools → Chinese Word Synonyms…**
 - **Expect:** dialog with General / Appearance / About tabs (not a JSON editor)
 - Change a field, Save, rebuild when asked (or use **Rebuild Index** on General)
+- On General → **Meaning delimiters**: toggle comma off/on, Save → expect rebuild prompt
 - Open **Tools → Add-ons → Chinese Word Synonyms → Config**
 - **Expect:** same GUI dialog (not raw JSON)
 
@@ -42,8 +43,8 @@ Run these after any change to indexing, rendering, or hooks. Use a Chinese vocab
 
 ### 5. Front stays clean
 
-- On question side with “Show only on back” on and “Show synonym counts” on: **Expect:** count pill only (no full Synonyms panel)
-- Turn “Show synonym counts” off: **Expect:** no pill on the front
+- On question side with “Show only on back” on and “Show synonym counts” on: **Expect:** Known/Total Synonyms card only (no full Synonyms panel)
+- Turn “Show synonym counts” off: **Expect:** no front summary card
 - After answer, go to next card question — **Expect:** previous back panel gone
 
 ### 6. Suspended filter

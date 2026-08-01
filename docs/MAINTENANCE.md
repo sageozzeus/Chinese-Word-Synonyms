@@ -10,7 +10,7 @@ During review:
 2. Normalizes the meaning into one or more synonym keys
 3. Looks up other notes in an in-memory inverted index that share those keys
 4. On the **answer** (default): injects a **Synonyms** HTML panel under the card
-5. On the **question** (when **Show only on back** and **Show synonym counts** are on): injects a small pill with the synonym count (e.g. `4 Synonyms`)
+5. On the **question** (when **Show only on back** and **Show synonym counts** are on): injects a compact card (`N Known Synonyms` / `N Total Synonyms`; Known = unsuspended)
 
 Does not edit notes or templates. If there are no synonyms, nothing is injected (no empty box, no “0 synonyms”).
 
@@ -28,12 +28,12 @@ card_will_show (reviewAnswer)  + reviewer_did_show_answer fallback
 card_will_show (reviewQuestion, back-only + show counts)
         │
         ▼
-  synonyms_for(meaning) → render_front_badge(count) → append
+  synonyms_for(meaning) → render_front_badge(known, total) → append
         │
 reviewer_did_show_question
         │
         ▼
-  remove #word-synonyms-panel
+  remove #word-synonyms-panel (answer leftover only; keep front card)
 ```
 
 ## Repository layout
@@ -107,8 +107,8 @@ Anki loads Python at startup. There is **no hot reload**.
 | `include_suspended` | bool | Applied at **lookup** (no rebuild). |
 | `candidate_min_length` | int | Min CJK length on candidates. |
 | `show_only_on_back` | bool | On = full panel on answer only (default). |
-| `show_synonym_counts` | bool | On = count pill on question when `show_only_on_back` is on. |
-| `meaning_split_delimiters` | string | Pipe-separated delimiters; `\|` itself via `\|\|`. |
+| `show_synonym_counts` | bool | On = Known/Total front card when `show_only_on_back` is on (Known = unsuspended). |
+| `meaning_split_delimiters` | string | Pipe-separated or raw chars; edited via General → Meaning delimiters. |
 | `min_key_length` | int | Drop short keys. |
 | `ignore_keys` | `string[]` | Drop useless keys like `something`. |
 | `strip_leading_to` | bool | Strip leading `to ` on short verb glosses. |

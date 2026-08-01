@@ -236,30 +236,37 @@
 
     /*
       === KEEP IN SYNC with chinese_word_synonyms/render.py FRONT_BADGE_CSS ===
+      Front summary reuses .word-synonyms shell from PANEL_CSS above.
     */
-    .word-synonyms-front-pill {
-      display: block;
+    .word-synonyms.word-synonyms-front {
       width: fit-content;
-      max-width: 100%;
-      margin: 0.85em auto 0;
-      padding: 0.32em 0.9em;
-      border-radius: 999px;
-      font-size: 0.78em;
-      font-weight: 600;
-      line-height: 1.25;
+      max-width: min(14em, 100%);
+      margin: 1.15em auto 0;
+      gap: 0.08em;
+      padding: 0.4em 0.65em 0.45em;
       text-align: center;
-      border: 1px solid rgba(120, 120, 120, 0.28);
-      background: #e4ecf6;
-      color: #1a3a6b;
-      box-shadow: 0 2px 6px rgba(40, 35, 30, 0.06);
-      box-sizing: border-box;
     }
-    .nightMode .word-synonyms-front-pill,
-    .night-mode .word-synonyms-front-pill {
-      border-color: #5a5a5a;
-      background: #2a303a;
-      color: #b8dcff;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+    .word-synonyms-front-stats {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.06em;
+      font-size: 0.72em;
+      line-height: 1.25;
+      font-weight: 500;
+      text-align: center;
+    }
+    .word-synonyms-front-known {
+      font-weight: 600;
+      color: #2e7d32;
+    }
+    .word-synonyms-front-total {
+      font-size: calc(1em - 2pt);
+      opacity: 0.88;
+    }
+    .nightMode .word-synonyms-front-known,
+    .night-mode .word-synonyms-front-known {
+      color: #81c784;
     }
   </style>
 </head>
@@ -276,10 +283,15 @@
 
   <div class="previews">
     <div class="preview-col">
-      <div class="preview-label">Card front (pill)</div>
+      <div class="preview-label">Card front (Known / Total)</div>
       <div id="qa-front-light" style="background: rgba(255,255,255,0.72); padding: 2rem 1.5rem; text-align: center;">
         <div class="hanzi" style="font-size: 2.75rem; font-weight: 500;">快乐</div>
-        <div class="word-synonyms-front-pill" id="word-synonyms-front-pill">6 Synonyms</div>
+        <div class="word-synonyms word-synonyms-front" id="word-synonyms-front-card">
+          <div class="word-synonyms-front-stats">
+            <div class="word-synonyms-front-known">2 Known Synonyms</div>
+            <div class="word-synonyms-front-total">6 Total Synonyms</div>
+          </div>
+        </div>
       </div>
     </div>
 

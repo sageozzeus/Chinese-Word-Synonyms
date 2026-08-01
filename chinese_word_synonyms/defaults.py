@@ -37,12 +37,16 @@ DEFAULT_CONFIG: dict[str, Any] = {
     "candidate_min_length": 1,
     "show_only_on_back": True,
     "show_synonym_counts": True,
-    "meaning_split_delimiters": ";|/|；|、",
+    "meaning_split_delimiters": ";|/|；|、|,",
     "min_key_length": 2,
     "strip_leading_to": True,
     "ignore_keys": ["something", "someone", "somebody"],
     "ui": deepcopy(DEFAULT_UI),
 }
+
+
+# Pre-comma default; upgrade installs that still have this exact value.
+_LEGACY_SPLIT_DELIMITERS = ";|/|；|、"
 
 
 def merge_config(raw: dict[str, Any] | None) -> dict[str, Any]:
@@ -60,6 +64,9 @@ def merge_config(raw: dict[str, Any] | None) -> dict[str, Any]:
             merged["ui"] = {**merged["ui"], **value}
         elif key == "ignore_keys" and isinstance(value, list):
             merged["ignore_keys"] = [str(v) for v in value]
+        elif key == "meaning_split_delimiters" and value == _LEGACY_SPLIT_DELIMITERS:
+            # Keep DEFAULT_CONFIG value (includes comma)
+            continue
         else:
             merged[key] = value
     return merged

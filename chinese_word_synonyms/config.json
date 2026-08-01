@@ -10,7 +10,7 @@
   "candidate_min_length": 1,
   "show_only_on_back": true,
   "show_synonym_counts": true,
-  "meaning_split_delimiters": ";|/|；|、",
+  "meaning_split_delimiters": ";|/|；|、|,",
   "min_key_length": 2,
   "strip_leading_to": true,
   "ignore_keys": ["something", "someone", "somebody"],
