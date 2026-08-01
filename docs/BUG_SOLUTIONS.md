@@ -22,6 +22,18 @@ Imported and adapted from sibling **Chinese Character Relations**. Same Anki pit
 
 ---
 
+## False synonyms via `etc` / filler gloss keys
+
+**Symptom:** Unrelated words show as synonyms because many Meaning fields end with `, etc.` (or similar filler). Rebuild counts extra meaning keys like `etc`, `sth`, `sb`.
+
+**Cause:** Normalization splits on commas/semicolons and keeps each chunk as a key. Default `ignore_keys` only dropped `something` / `someone` / `somebody`, so list-ending and dictionary-meta tokens became shared keys.
+
+**Fix:** Expand `DEFAULT_IGNORE_KEYS` (list endings, gloss placeholders, dictionary shorthand, selected lexicography boilerplate). `merge_config` upgrades installs still on the old three-item list to the new default; custom lists are left alone. Rebuild Index after upgrade.
+
+**Not ignored (by design):** `formal`, `informal`, `dialect`, and common function words that can be real glosses.
+
+---
+
 ## Indexed 0 notes, 0 meaning keys
 
 **Symptom:** Rebuild Index tooltip shows `indexed 0 notes, 0 meaning keys`.

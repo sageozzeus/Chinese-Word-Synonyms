@@ -6,6 +6,8 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any
 
+from .meaning import DEFAULT_IGNORE_KEYS
+
 DEFAULT_UI: dict[str, Any] = {
     "max_width": "100%",
     "border_radius_px": 12,
@@ -40,13 +42,16 @@ DEFAULT_CONFIG: dict[str, Any] = {
     "meaning_split_delimiters": ";|/|；|、|,",
     "min_key_length": 2,
     "strip_leading_to": True,
-    "ignore_keys": ["something", "someone", "somebody"],
+    "ignore_keys": list(DEFAULT_IGNORE_KEYS),
     "ui": deepcopy(DEFAULT_UI),
 }
 
 
 # Pre-comma default; upgrade installs that still have this exact value.
 _LEGACY_SPLIT_DELIMITERS = ";|/|；|、"
+
+# Pre-expansion ignore list; upgrade installs that still have only these three.
+_LEGACY_IGNORE_KEYS = ["something", "someone", "somebody"]
 
 
 def merge_config(raw: dict[str, Any] | None) -> dict[str, Any]:
@@ -63,6 +68,9 @@ def merge_config(raw: dict[str, Any] | None) -> dict[str, Any]:
         elif key == "ui" and isinstance(value, dict):
             merged["ui"] = {**merged["ui"], **value}
         elif key == "ignore_keys" and isinstance(value, list):
+            # Upgrade bare legacy list to the expanded default; keep custom lists.
+            if [str(v) for v in value] == _LEGACY_IGNORE_KEYS:
+                continue
             merged["ignore_keys"] = [str(v) for v in value]
         elif key == "meaning_split_delimiters" and value == _LEGACY_SPLIT_DELIMITERS:
             # Keep DEFAULT_CONFIG value (includes comma)

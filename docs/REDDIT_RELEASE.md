@@ -4,6 +4,30 @@ Copy-paste for [r/Anki](https://www.reddit.com/r/Anki/). Update this file when y
 
 ---
 
+## v0.1.4 — update post
+
+**Title:** Chinese Word Synonyms v0.1.4 — ignore filler keys like “etc.”
+
+**Body:**
+
+Update to **Chinese Word Synonyms** — offline synonyms from your own deck by shared Meaning field.
+
+**What’s new in v0.1.4**
+
+- Ignores filler/meta gloss keys (`etc`, `sth`, `sb`, dictionary shorthand, …)
+- Fixes false synonym clusters when many notes end with `, etc.`
+- Old three-item ignore lists upgrade automatically — **Rebuild Index** after updating
+
+**Install:** **Tools → Add-ons → Get Add-ons…** → code `1733540881`, or [AnkiWeb](https://ankiweb.net/shared/info/1733540881). Restart → **Tools → Chinese Word Synonyms…** → **Rebuild Index**.
+
+- AnkiWeb: https://ankiweb.net/shared/info/1733540881
+- Release: https://github.com/sageozzeus/Chinese-Word-Synonyms/releases/latest
+- Issues: https://github.com/sageozzeus/Chinese-Word-Synonyms/issues
+
+Anki 23.10+, macOS / Windows / Linux. MIT.
+
+---
+
 ## v0.1.3 — update post
 
 **Title:** Chinese Word Synonyms v0.1.3 — Known/Total front card + meaning delimiters

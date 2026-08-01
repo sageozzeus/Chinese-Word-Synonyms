@@ -26,7 +26,49 @@ _LEADING_TO_RE = re.compile(r"^to\s+", re.IGNORECASE)
 _CJK_ONLY_RE = re.compile(r"^[\u3400-\u4DBF\u4E00-\u9FFF]+$")
 
 DEFAULT_SPLIT_DELIMITERS = ";|/|；|、|,"
-DEFAULT_IGNORE_KEYS = ("something", "someone", "somebody")
+# Filler / meta gloss tokens that must never become synonym keys.
+# Keep in sync with defaults.DEFAULT_CONFIG["ignore_keys"].
+DEFAULT_IGNORE_KEYS = (
+    # Pronoun placeholders
+    "something",
+    "someone",
+    "somebody",
+    # A — list endings
+    "etc",
+    "etcetera",
+    "et cetera",
+    "and so on",
+    "and so forth",
+    "and the like",
+    # B — gloss placeholders
+    "sth",
+    "sb",
+    "sbd",
+    "oneself",
+    "one's",
+    # C — dictionary shorthand (normalized forms after edge-punct strip)
+    "e.g",
+    "i.e",
+    "cf",
+    "viz",
+    "fig",
+    "abbr",
+    "lit",
+    "literal",
+    "literally",
+    "colloquial",
+    "slang",
+    "archaic",
+    "obsolete",
+    "onom",
+    "onomatopoeia",
+    # D — lexicography boilerplate (selected)
+    "see also",
+    "variant of",
+    "also written",
+    "measure word",
+    "mw",
+)
 
 # Order shown in Settings → Meaning delimiters (labels are the characters).
 KNOWN_SPLIT_DELIMITERS: tuple[str, ...] = (";", ",", "|", "/", "；", "、")

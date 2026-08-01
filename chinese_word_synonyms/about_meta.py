@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import List, Tuple
 
 ADDON_NAME = "Chinese Word Synonyms"
-ADDON_VERSION = "0.1.3"
+ADDON_VERSION = "0.1.4"
 MIN_ANKI = "23.10+"
 AUTHOR = "Ozzeus"
 LICENSE = "MIT"
@@ -25,6 +25,14 @@ ANKIWEB_CODE = "1733540881"
 
 # Newest first. Keep the latest entry to ~5 bullets for the About dialog.
 CHANGELOG: List[Tuple[str, List[str]]] = [
+    (
+        "0.1.4",
+        [
+            "Ignore filler meaning keys (etc, sth, sb, dictionary shorthand, …)",
+            "Stops false synonym clusters from glosses ending in “etc.”",
+            "Legacy three-item ignore lists upgrade on load; rebuild after update",
+        ],
+    ),
     (
         "0.1.3",
         [

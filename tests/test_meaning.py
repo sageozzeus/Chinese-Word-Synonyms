@@ -13,7 +13,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from chinese_word_synonyms.defaults import merge_config  # noqa: E402
 from chinese_word_synonyms.meaning import (  # noqa: E402
+    DEFAULT_IGNORE_KEYS,
     DEFAULT_SPLIT_DELIMITERS,
     delimiters_to_spec,
     normalize_from_config,
@@ -121,6 +123,25 @@ class TestNormalizeMeaning(unittest.TestCase):
             ["happy"],
         )
 
+    def test_default_ignores_filler_glosses(self) -> None:
+        self.assertEqual(
+            normalize_meaning("happy, glad, etc."),
+            ["happy", "glad"],
+        )
+        self.assertEqual(
+            normalize_meaning("sth; sb; oneself; and so on"),
+            [],
+        )
+        self.assertEqual(
+            normalize_meaning("archaic; slang; fig.; see also; mw"),
+            [],
+        )
+        # formal / informal / dialect intentionally kept as real keys
+        self.assertEqual(
+            normalize_meaning("formal; informal; dialect"),
+            ["formal", "informal", "dialect"],
+        )
+
     def test_dedupe(self) -> None:
         self.assertEqual(
             normalize_meaning("happy; Happy; happy"),
@@ -143,6 +164,20 @@ class TestNormalizeMeaning(unittest.TestCase):
             normalize_from_config("adj. happy; someone; glad", conf),
             ["happy", "glad"],
         )
+
+
+class TestMergeIgnoreKeys(unittest.TestCase):
+    def test_legacy_ignore_keys_upgraded(self) -> None:
+        conf = merge_config(
+            {"ignore_keys": ["something", "someone", "somebody"]}
+        )
+        self.assertEqual(conf["ignore_keys"], list(DEFAULT_IGNORE_KEYS))
+        self.assertIn("etc", conf["ignore_keys"])
+
+    def test_custom_ignore_keys_preserved(self) -> None:
+        custom = ["something", "someone", "somebody", "custom-token"]
+        conf = merge_config({"ignore_keys": custom})
+        self.assertEqual(conf["ignore_keys"], custom)
 
 
 if __name__ == "__main__":

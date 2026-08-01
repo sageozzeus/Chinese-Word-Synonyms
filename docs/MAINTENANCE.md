@@ -110,7 +110,7 @@ Anki loads Python at startup. There is **no hot reload**.
 | `show_synonym_counts` | bool | On = Known/Total front card when `show_only_on_back` is on (Known = unsuspended). |
 | `meaning_split_delimiters` | string | Pipe-separated or raw chars; edited via General → Meaning delimiters. |
 | `min_key_length` | int | Drop short keys. |
-| `ignore_keys` | `string[]` | Drop useless keys like `something`. |
+| `ignore_keys` | `string[]` | Drop filler/meta keys (`etc`, `sth`, `sb`, …). Legacy 3-item lists upgrade on merge. |
 | `strip_leading_to` | bool | Strip leading `to ` on short verb glosses. |
 | `ui` | object | Appearance; applies next flip. |
 

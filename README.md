@@ -42,7 +42,7 @@ Or open the [AnkiWeb listing](https://ankiweb.net/shared/info/1733540881) and cl
 ### From GitHub Release
 
 1. Open the latest [Release](https://github.com/sageozzeus/Chinese-Word-Synonyms/releases/latest).
-2. Download the **`.ankiaddon`** asset (e.g. `chinese_word_synonyms-0.1.3.ankiaddon`), not Source code.
+2. Download the **`.ankiaddon`** asset (e.g. `chinese_word_synonyms-0.1.4.ankiaddon`), not Source code.
 3. Double-click the file, or open it with Anki / drag it onto the Anki window.
 4. Restart Anki when prompted.
 

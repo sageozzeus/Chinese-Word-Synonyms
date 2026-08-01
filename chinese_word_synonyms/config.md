@@ -23,7 +23,7 @@ Settings are edited in a **GUI dialog** (no JSON editing required):
 
 After changing decks, fields, or meaning delimiters, rebuild when prompted (or use **Rebuild Index** on this tab).
 
-Advanced meaning-normalization knobs (`min_key_length`, `ignore_keys`, `strip_leading_to`) live in config defaults and are preserved on Save; edit via Add-ons config storage if you need to tweak them.
+Advanced meaning-normalization knobs (`min_key_length`, `ignore_keys`, `strip_leading_to`) live in config defaults and are preserved on Save; edit via Add-ons config storage if you need to tweak them. Default `ignore_keys` drops filler/meta gloss tokens (`etc`, `sth`, `sb`, dictionary shorthand, …); installs still on the old three-item list are upgraded on merge.
 
 ## Appearance tab
 
